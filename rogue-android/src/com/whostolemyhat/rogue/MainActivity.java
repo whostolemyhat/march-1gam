@@ -1,9 +1,10 @@
-package com.whostolemyhat;
+package com.whostolemyhat.rogue;
 
 import android.os.Bundle;
 
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
+import com.whostolemyhat.rogue.RogueGame;
 
 public class MainActivity extends AndroidApplication {
     @Override

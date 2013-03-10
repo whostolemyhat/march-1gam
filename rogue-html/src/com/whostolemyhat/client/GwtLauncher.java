@@ -1,6 +1,6 @@
 package com.whostolemyhat.client;
 
-import com.whostolemyhat.RogueGame;
+import com.whostolemyhat.rogue.RogueGame;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.backends.gwt.GwtApplication;
 import com.badlogic.gdx.backends.gwt.GwtApplicationConfiguration;
