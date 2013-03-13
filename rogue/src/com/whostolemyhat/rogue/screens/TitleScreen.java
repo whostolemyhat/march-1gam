@@ -41,19 +41,12 @@ public class TitleScreen extends AbstractScreen {
 		Color c = splashImage.getColor();
 		splashImage.setColor(c.r, c.g, c.b, 0);
 		
-//		Sequence actions = Sequence.$(FadeIn.$(0.75f), Delay.$(FadeOut.$(0.75f), 1.75f));
-//		actions.setCompletionListener(new OnActionCompleted() {
-//			@Override
-//			public void completed(Action action) {
-//				game.setScreen(game.getMenuScreen());
-//			}
-//		});
-//		splashImage.action(actions);
 		splashImage.addAction(sequence(fadeIn(0.5f), delay(1.75f), fadeOut(0.75f),
 				new Action() {
 			@Override
 			public boolean act(float delta) {
-				game.setScreen(new MenuScreen(game));
+//				game.setScreen(new MenuScreen(game));
+				game.setScreen(new GameScreen(game));
 				return true;
 			}
 		}));

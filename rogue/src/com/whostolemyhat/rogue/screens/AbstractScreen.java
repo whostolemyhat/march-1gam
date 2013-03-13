@@ -6,25 +6,48 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.whostolemyhat.rogue.RogueGame;
 
 public class AbstractScreen implements Screen {
 	
 	protected final RogueGame game;
-	protected final BitmapFont font;
-	protected final SpriteBatch batch;
 	protected final Stage stage;
+	private BitmapFont font;
+	private SpriteBatch batch;
+	private Skin skin;
 	
 	public AbstractScreen(RogueGame game) {
 		this.game = game;
-		this.font = new BitmapFont();
-		this.batch = new SpriteBatch();
+//		this.font = new BitmapFont();
+//		this.batch = new SpriteBatch();
 		this.stage = new Stage(0, 0, true);
 	}
 	
 	protected String getName() {
 		return getClass().getSimpleName();
 	}
+	
+	public BitmapFont getFont() {
+		if(font == null) {
+			font = new BitmapFont();
+		}
+		return font;
+	}
+	
+	public SpriteBatch getBatch() {
+		if(batch == null) {
+			batch = new SpriteBatch();
+		}
+		return batch;
+	}
+	
+//	protected Skin getSkin() {
+//		if(skin == null) {
+//			skin = new Skin(Gdx.files.internal("data/uiskin.json"));
+//		}
+//		return skin;
+//	}
 	
 	@Override
 	public void render(float delta) {

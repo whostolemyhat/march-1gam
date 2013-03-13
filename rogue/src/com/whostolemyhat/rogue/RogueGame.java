@@ -2,6 +2,7 @@ package com.whostolemyhat.rogue;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.whostolemyhat.rogue.screens.GameScreen;
 import com.whostolemyhat.rogue.screens.TitleScreen;
 
 public class RogueGame extends Game {
@@ -16,6 +17,7 @@ public class RogueGame extends Game {
 	public void create() {	
 		Gdx.app.log(RogueGame.LOG, "Creating game");
 		setScreen(getTitleScreen());
+//		setScreen(new GameScreen());
 	}
 
 	@Override
