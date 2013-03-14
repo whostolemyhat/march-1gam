@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Rectangle;
+import com.whostolemyhat.rogue.RogueGame;
 import com.whostolemyhat.rogue.models.Block;
 import com.whostolemyhat.rogue.models.Hero;
 import com.whostolemyhat.rogue.models.World;
@@ -53,9 +54,46 @@ public class WorldRenderer {
 	private void loadTextures() {
 		heroTexture = new Texture(Gdx.files.internal("images/hero_01.png"));
 		blockTexture = new Texture(Gdx.files.internal("images/block.png"));
+		
+		Gdx.app.log(RogueGame.LOG, heroTexture.toString());
 	}
 	
 	public void render() {
+		batch.begin();
+		drawBlocks();
+		drawHero();
+		batch.end();
+		
+		if(debug) {
+			drawDebug();
+		}
+		
+	}
+	
+	private void drawBlocks() {
+		for(Block block : world.getBlocks()) {
+			batch.draw(
+					blockTexture, 
+					block.getPosition().x * ppuX, 
+					block.getPosition().y * ppuY,
+					Block.SIZE * ppuX, 
+					Block.SIZE * ppuY
+					);
+		}
+	}
+	
+	private void drawHero() {
+		Hero hero = world.getHero();
+		batch.draw(
+				heroTexture, 
+				hero.getPosition().x * ppuX, 
+				hero.getPosition().y * ppuY, 
+				Hero.SIZE * ppuX, 
+				Hero.SIZE * ppuY
+				);
+	}
+	
+	private void drawDebug() {
 		debugRenderer.setProjectionMatrix(cam.combined);
 		debugRenderer.begin(ShapeType.Rectangle);
 		
@@ -64,7 +102,7 @@ public class WorldRenderer {
 			float x1 = block.getPosition().x + rect.x;
 			float y1 = block.getPosition().y + rect.y;
 			
-			debugRenderer.setColor(new Color(1, 0, 0, 1));
+			debugRenderer.setColor(new Color(0, 1, 0, 1));
 			debugRenderer.rect(x1, y1, rect.width, rect.height);
 		}
 		
@@ -73,9 +111,8 @@ public class WorldRenderer {
 		float x1 = hero.getPosition().x + rect.x;
 		float y1 = hero.getPosition().y + rect.y;
 		
-		debugRenderer.setColor(new Color(0, 1, 0, 1));
+		debugRenderer.setColor(new Color(1, 0, 0, 1));
 		debugRenderer.rect(x1, y1, rect.width, rect.height);
 		debugRenderer.end();
-		
 	}
 }

@@ -16,8 +16,8 @@ public class RogueGame extends Game {
 	@Override
 	public void create() {	
 		Gdx.app.log(RogueGame.LOG, "Creating game");
-		setScreen(getTitleScreen());
-//		setScreen(new GameScreen(this));
+//		setScreen(getTitleScreen());
+		setScreen(new GameScreen(this));
 	}
 
 	@Override

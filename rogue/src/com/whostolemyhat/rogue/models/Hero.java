@@ -10,7 +10,7 @@ public class Hero {
 	}
 	
 	public static final float SPEED = 4.0f;
-	static final float SIZE = 0.5f;
+	public static final float SIZE = 0.5f;
 
 	Vector2 position = new Vector2();
 	Vector2 acceleration = new Vector2();

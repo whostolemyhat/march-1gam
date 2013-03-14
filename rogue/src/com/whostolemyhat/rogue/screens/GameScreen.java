@@ -27,5 +27,10 @@ public class GameScreen extends AbstractScreen {
 		world = new World();
 		renderer = new WorldRenderer(world, true);
 	}
+	
+	@Override
+	public void resize(int width, int height) {
+		renderer.setSize(width, height);
+	}
 
 }
