@@ -3,7 +3,7 @@ package com.whostolemyhat.rogue.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL10;
 import com.whostolemyhat.rogue.RogueGame;
-import com.whostolemyhat.rogue.WorldRenderer;
+import com.whostolemyhat.rogue.controllers.WorldRenderer;
 import com.whostolemyhat.rogue.models.World;
 
 public class GameScreen extends AbstractScreen {
@@ -25,7 +25,7 @@ public class GameScreen extends AbstractScreen {
 	@Override
 	public void show() {
 		world = new World();
-		renderer = new WorldRenderer(world);
+		renderer = new WorldRenderer(world, true);
 	}
 
 }

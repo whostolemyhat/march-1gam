@@ -23,19 +23,18 @@ public class World {
 	private void createDemoWorld() {
 		hero = new Hero(new Vector2(7, 2));
 		
-		for(int i = 0; i < 10; i++) {
+		for(int i = 0; i < 20; i++) {
 			blocks.add(new Block(new Vector2(i, 0)));
-			blocks.add(new Block(new Vector2(i, 1)));
-			
-			blocks.add(new Block(new Vector2(9, 2)));
-			blocks.add(new Block(new Vector2(9, 3)));
-			blocks.add(new Block(new Vector2(9, 4)));
-			blocks.add(new Block(new Vector2(9, 5)));
-
-			blocks.add(new Block(new Vector2(6, 3)));
-			blocks.add(new Block(new Vector2(6, 4)));
-			blocks.add(new Block(new Vector2(6, 5)));
+			blocks.add(new Block(new Vector2(i, 13)));
 		}
+		for(int i = 0; i < 14; i++) {
+			blocks.add(new Block(new Vector2(0, i)));
+			blocks.add(new Block(new Vector2(19, i)));
+		}
+
+		blocks.add(new Block(new Vector2(16, 3)));
+		blocks.add(new Block(new Vector2(16, 4)));
+		blocks.add(new Block(new Vector2(16, 5)));
 	}
 	
 }

@@ -23,7 +23,7 @@ public class TitleScreen extends AbstractScreen {
 	public void show() {
 		super.show();
 		
-		splashTexture = new Texture("stars.png");
+		splashTexture = new Texture("images/stars.png");
 		// filter improves stretching
 		splashTexture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		// atlas - splash img begins at 0,0
