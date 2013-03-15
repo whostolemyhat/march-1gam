@@ -22,9 +22,7 @@ public class WorldRenderer {
 	
 	// debug
 	ShapeRenderer debugRenderer = new ShapeRenderer();
-	
-	private Texture heroTexture;
-	private Texture blockTexture;
+
 	private SpriteBatch batch;
 	private boolean debug = false;
 	private int width;
@@ -41,7 +39,6 @@ public class WorldRenderer {
 		this.cam.update();
 		this.debug = debug;
 		this.batch = new SpriteBatch();
-		loadTextures();
 	}
 	
 	public void setSize(int w, int h) {
@@ -49,13 +46,6 @@ public class WorldRenderer {
 		this.height = h;
 		ppuX = (float)width / CAMERA_WIDTH;
 		ppuY = (float)height / CAMERA_HEIGHT;
-	}
-	
-	private void loadTextures() {
-		heroTexture = new Texture(Gdx.files.internal("images/hero_01.png"));
-		blockTexture = new Texture(Gdx.files.internal("images/block.png"));
-		
-		Gdx.app.log(RogueGame.LOG, heroTexture.toString());
 	}
 	
 	public void render() {
@@ -67,13 +57,12 @@ public class WorldRenderer {
 		if(debug) {
 			drawDebug();
 		}
-		
 	}
 	
 	private void drawBlocks() {
 		for(Block block : world.getBlocks()) {
 			batch.draw(
-					blockTexture, 
+					block.texture,
 					block.getPosition().x * ppuX, 
 					block.getPosition().y * ppuY,
 					Block.SIZE * ppuX, 
@@ -85,7 +74,7 @@ public class WorldRenderer {
 	private void drawHero() {
 		Hero hero = world.getHero();
 		batch.draw(
-				heroTexture, 
+				hero.texture, 
 				hero.getPosition().x * ppuX, 
 				hero.getPosition().y * ppuY, 
 				Hero.SIZE * ppuX, 
@@ -102,7 +91,7 @@ public class WorldRenderer {
 			float x1 = block.getPosition().x + rect.x;
 			float y1 = block.getPosition().y + rect.y;
 			
-			debugRenderer.setColor(new Color(0, 1, 0, 1));
+			debugRenderer.setColor(block.debugColour);
 			debugRenderer.rect(x1, y1, rect.width, rect.height);
 		}
 		
@@ -111,7 +100,7 @@ public class WorldRenderer {
 		float x1 = hero.getPosition().x + rect.x;
 		float y1 = hero.getPosition().y + rect.y;
 		
-		debugRenderer.setColor(new Color(1, 0, 0, 1));
+		debugRenderer.setColor(hero.debugColour);
 		debugRenderer.rect(x1, y1, rect.width, rect.height);
 		debugRenderer.end();
 	}
