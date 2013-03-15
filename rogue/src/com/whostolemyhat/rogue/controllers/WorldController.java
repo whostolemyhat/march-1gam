@@ -3,7 +3,10 @@ package com.whostolemyhat.rogue.controllers;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.badlogic.gdx.Gdx;
+import com.whostolemyhat.rogue.RogueGame;
 import com.whostolemyhat.rogue.models.Hero;
+import com.whostolemyhat.rogue.models.Hero.State;
 import com.whostolemyhat.rogue.models.World;
 
 public class WorldController {
@@ -13,6 +16,7 @@ public class WorldController {
 	
 	private World world;
 	private Hero hero;
+	private Hero enemy;
 	
 	static Map<Keys, Boolean> keys = new HashMap<WorldController.Keys, Boolean>();
 	static {
@@ -66,5 +70,46 @@ public class WorldController {
 	
 	public void shootReleased() {
 		keys.get(keys.put(Keys.SHOOT, false));
+	}
+	
+	public void update(float delta) {
+		processInput();
+		hero.update(delta);
+	}
+	
+	private void processInput() {
+		if(keys.get(Keys.LEFT)) {
+			hero.setState(State.WALKING);
+			hero.getVelocity().x = -Hero.SPEED;
+		}
+		
+		if(keys.get(Keys.RIGHT)) {
+			hero.setState(State.WALKING);
+			hero.getVelocity().x = Hero.SPEED;
+		}
+		
+		if(keys.get(Keys.UP)) {
+			hero.setState(State.WALKING);
+			hero.getVelocity().y = Hero.SPEED;
+		}
+		
+		if(keys.get(Keys.DOWN)) {
+			hero.setState(State.WALKING);
+			hero.getVelocity().y = -Hero.SPEED;
+		}
+		
+		if((keys.get(Keys.LEFT) && keys.get(Keys.RIGHT)) ||
+			(keys.get(Keys.UP) && keys.get(Keys.DOWN)) ||
+			(!keys.get(Keys.LEFT) && !keys.get(Keys.RIGHT) && !keys.get(Keys.UP) && !keys.get(Keys.DOWN))) {
+				hero.setState(State.IDLE);
+				hero.getAcceleration().x = 0;
+				hero.getAcceleration().y = 0;
+				hero.getVelocity().x = 0;
+				hero.getVelocity().y = 0;
+		}
+		
+		if(keys.get(Keys.SHOOT)) {
+			Gdx.app.log(RogueGame.LOG, "Shooting!");
+		}
 	}
 }

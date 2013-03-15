@@ -7,6 +7,7 @@ public class World {
 	
 	Array<Block> blocks = new Array<Block>();
 	Hero hero;
+	Array<Hero> enemies = new Array<Hero>();
 	
 	public World() {
 		createDemoWorld();
@@ -20,8 +21,13 @@ public class World {
 		return hero;
 	}
 	
+	public Array<Hero> getEnemies() {
+		return enemies;
+	}
+	
 	private void createDemoWorld() {
 		hero = new Hero(new Vector2(7, 2));
+		enemies.add(new Enemy(new Vector2(10, 4)));
 		
 		for(int i = 0; i < 20; i++) {
 			blocks.add(new Block(new Vector2(i, 0)));

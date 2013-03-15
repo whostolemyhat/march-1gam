@@ -1,14 +1,10 @@
 package com.whostolemyhat.rogue.controllers;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Rectangle;
-import com.whostolemyhat.rogue.RogueGame;
 import com.whostolemyhat.rogue.models.Block;
 import com.whostolemyhat.rogue.models.Hero;
 import com.whostolemyhat.rogue.models.World;
@@ -52,6 +48,7 @@ public class WorldRenderer {
 		batch.begin();
 		drawBlocks();
 		drawHero();
+		drawEnemies();
 		batch.end();
 		
 		if(debug) {
@@ -80,6 +77,18 @@ public class WorldRenderer {
 				Hero.SIZE * ppuX, 
 				Hero.SIZE * ppuY
 				);
+	}
+	
+	private void drawEnemies() {
+		for(Hero enemy : world.getEnemies()) {
+			batch.draw(
+					enemy.texture,
+					enemy.getPosition().x * ppuX,
+					enemy.getPosition().y * ppuY,
+					Hero.SIZE * ppuX,
+					Hero.SIZE * ppuY
+					);
+		}
 	}
 	
 	private void drawDebug() {
