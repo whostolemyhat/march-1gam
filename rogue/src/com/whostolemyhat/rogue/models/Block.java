@@ -3,6 +3,7 @@ package com.whostolemyhat.rogue.models;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
@@ -28,6 +29,16 @@ public class Block {
 	
 	public Rectangle getBounds() {
 		return bounds;
+	}
+	
+	public void draw(SpriteBatch batch, float ppuX, float ppuY) {
+		batch.draw(
+				this.texture,
+				this.getPosition().x * ppuX, 
+				this.getPosition().y * ppuY,
+				Block.SIZE * ppuX, 
+				Block.SIZE * ppuY
+				);
 	}
 	
 }

@@ -3,6 +3,7 @@ package com.whostolemyhat.rogue.models;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
@@ -13,13 +14,14 @@ public class Hero {
 	}
 	
 	public static final float SPEED = 4.0f;
-	public static final float SIZE = 0.5f;
+	public final float SIZE = 0.6f;
 
 	Vector2 position = new Vector2();
 	Vector2 acceleration = new Vector2();
 	Vector2 velocity = new Vector2();
 	Rectangle bounds = new Rectangle();
 	State state = State.IDLE;
+	int health = 6; // 1 health = 1/2 heart
 	
 	public Color debugColour = new Color(1, 0, 0, 1);
 	public Texture texture;
@@ -53,5 +55,15 @@ public class Hero {
 	
 	public void update(float delta) {
 		position.add(velocity.tmp().mul(delta));
+	}
+	
+	public void draw(SpriteBatch batch, float ppuX, float ppuY) {
+		batch.draw(
+				this.texture, 
+				this.getPosition().x * ppuX, 
+				this.getPosition().y * ppuY, 
+				this.SIZE * ppuX, 
+				this.SIZE * ppuY
+				);
 	}
 }

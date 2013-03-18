@@ -5,7 +5,7 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.GL10;
 import com.whostolemyhat.rogue.RogueGame;
-import com.whostolemyhat.rogue.controllers.WorldController;
+import com.whostolemyhat.rogue.controllers.HeroController;
 import com.whostolemyhat.rogue.controllers.WorldRenderer;
 import com.whostolemyhat.rogue.models.World;
 
@@ -13,7 +13,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor {
 	
 	private World world;
 	private WorldRenderer renderer;
-	private WorldController controller;
+	private HeroController controller;
 	
 	private int width, height;
 	
@@ -34,7 +34,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor {
 	public void show() {
 		world = new World();
 		renderer = new WorldRenderer(world, true);
-		controller = new WorldController(world);
+		controller = new HeroController(world);
 		Gdx.input.setInputProcessor(this);
 	}
 	
