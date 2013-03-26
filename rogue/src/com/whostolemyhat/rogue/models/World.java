@@ -3,9 +3,14 @@ package com.whostolemyhat.rogue.models;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+import com.whostolemyhat.rogue.RogueGame;
 
 public class World {
 	
@@ -15,24 +20,46 @@ public class World {
 	Array<Door> doors = new Array<Door>();
 	
 	Level level;
-	Array<Rectangle> collisionRects = new Array<Rectangle>();
+	public Array<Rectangle> collisionRects = new Array<Rectangle>();
+	
+	private float ppuX;
+	private float ppuY;
+	
+	public float getPpuX() {
+		return ppuX;
+	}
+	
+	public float getPpuY() {
+		return ppuY;
+	}
+	
+	public void setPpuX(float newPpu) {
+		this.ppuX = newPpu;
+	}
+	
+	public void setPpuY(float newPpu) {
+		this.ppuY = newPpu;
+	}
 	
 	public World() {
 		createDemoWorld();
 	}
 	
-//	public Array<Block> getBlocks() {
-//		Block block;
-//		for(int col = 0; col <= level.getWidth() - 1; col++) {
-//			for(int row = 0; row < level.getHeight() - 1; row++) {
-//				block = level.getBlocks()[col][row];
-//				if(block != null) {
-//					blocks.add(block);
-//				}
-//			}
-//		}
-//		return blocks;
-//	}
+	public ArrayList<Block> getBlocks() {
+		Block block;
+		ArrayList<Block> blocks = new ArrayList<Block>();
+		
+		for(int col = 0; col <= level.getWidth() - 1; col++) {
+			for(int row = 0; row < level.getHeight() - 1; row++) {
+				block = level.getBlocks()[col][row];
+				if(block != null) {
+					blocks.add(block);
+				}
+			}
+		}
+		
+		return blocks;
+	}
 	
 	public Array<Door> getDoors() {
 		return doors;

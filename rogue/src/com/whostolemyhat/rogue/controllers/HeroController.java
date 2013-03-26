@@ -4,6 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool;
@@ -34,6 +37,9 @@ public class HeroController {
 	public HeroController(World world) {
 		this.world = world;
 		this.hero = world.getHero();
+		for(Block block : world.getBlocks()) {
+			collidable.add(block);
+		}
 	}
 	
 	public void leftPressed() {
@@ -78,25 +84,13 @@ public class HeroController {
 	
 	public void update(float delta) {
 		processInput();
-		checkCollisionWithBlocks(delta);
+		
 //		checkCollisions();
 		hero.update(delta);
-	}
-//	
-//	private void checkCollisions() {
-//		// naive collision detection
-//		for(Block block : world.getBlocks()) {
-//			if(block == null) {
-//				continue;
-//			}
-//			if(hero.getBounds().overlaps(block.getBounds())) {
-//				Gdx.app.log(RogueGame.LOG, hero.getBounds().toString());
-//				Gdx.app.log(RogueGame.LOG, block.getBounds().toString());
-//				Gdx.app.log(RogueGame.LOG, "Collision!");
-//			}
-//			
-//		}
-//	}
+//		Gdx.app.log(RogueGame.LOG, String.format("%f %f %f %f", hero.getBounds().x, hero.getBounds().y, hero.getBounds().x + hero.getVelocity().x, hero.getBounds().y + hero.getBounds().height));
+
+		checkCollisionWithBlocks(delta);
+	} 
 	
 	// http://obviam.net/index.php/getting-started-in-android-game-development-with-libgdx-tutorial-part-4-collision-detection/
 	private Pool<Rectangle> rectPool = new Pool<Rectangle>() {
@@ -109,9 +103,16 @@ public class HeroController {
 	private void checkCollisionWithBlocks(float delta) {
 		// velocity relative to time
 		hero.getVelocity().mul(delta);
-		
+		// get rect to use for collisions
 		Rectangle heroRect = rectPool.obtain();
-		heroRect.set(hero.getBounds().x, hero.getBounds().y, hero.getBounds().width, hero.getBounds().height);
+		// set collision rect to hero pos	
+		heroRect.set(
+				hero.getBounds().x, 
+				hero.getBounds().y, 
+				hero.getBounds().width, 
+				hero.getBounds().height
+				);
+		
 		int startX, endX;
 		int startY = (int)hero.getBounds().y;
 		int endY = (int)(hero.getBounds().y + hero.getBounds().height);
@@ -123,45 +124,45 @@ public class HeroController {
 			startX = endX = (int)Math.floor(hero.getBounds().x + hero.getBounds().width + hero.getVelocity().x);
 		}
 		populateCollidableBlocks(startX, startY, endX, endY);
+		
 		heroRect.x += hero.getVelocity().x;
 		world.getCollisonRects().clear();
 		for(Block block : collidable) {
-			if(block == null) {
-				continue;
-			}
-			if(heroRect.overlaps(block.getBounds())) {
-				hero.getVelocity().x = 0; // if collided, movement = 0
-				world.getCollisonRects().add(block.getBounds());
-				break;
+			if(block != null) {
+				if(heroRect.overlaps(block.getBounds())) {
+					hero.getVelocity().x = 0; // if collided, movement = 0
+					world.getCollisonRects().add(block.getBounds());
+					break;
+				}
 			}
 		}
-		// reset bounding box rect
+		// reset bounding box rect to hero position
 		heroRect.x = hero.getPosition().x;
 		startX = (int)hero.getBounds().x;
 		endX = (int)(hero.getBounds().x + hero.getBounds().width);
+	
+		if(hero.getVelocity().y < 0) {
+			// if going down
+			startY = endY = (int)Math.floor(hero.getBounds().y + hero.getVelocity().y);
+		} else {
+			startY = endY = (int)Math.floor(hero.getBounds().y + hero.getBounds().height + hero.getVelocity().y);
+		}
+		populateCollidableBlocks(startX, startY, endX, endY);
+		heroRect.y += hero.getVelocity().y;
+		for(Block block : collidable) {
+			if(block != null) {
+				if(heroRect.overlaps(block.getBounds())) {
+					hero.getVelocity().y = 0;
+					world.getCollisonRects().add(block.getBounds());
+					break;
+				}
+			}
+		}
+		heroRect.y = hero.getPosition().y;
+		hero.getPosition().add(hero.getVelocity());
+		hero.getBounds().x = hero.getPosition().x;
+		hero.getBounds().y = hero.getPosition().y;
 		
-//		if(hero.getVelocity().y < 0) {
-//			// if going down
-//			startY = endY = (int)Math.floor(hero.getBounds().y + hero.getVelocity().y);
-//		} else {
-//			startY = endY = (int)Math.floor(hero.getBounds().y + hero.getBounds().height + hero.getVelocity().y);
-//		}
-//		populateCollidableBlocks(startX, startY, endX, endY);
-//		heroRect.y += hero.getVelocity().y;
-//		for(Block block : collidable) {
-//			if(block == null) {
-//				continue;
-//			}
-//			if(heroRect.overlaps(block.getBounds())) {
-//				hero.getVelocity().y = 0;
-//				world.getCollisonRects().add(block.getBounds());
-//				break;
-//			}
-//		}
-//		heroRect.y = hero.getPosition().y;
-//		hero.getPosition().add(hero.getVelocity());
-//		hero.getBounds().x = hero.getPosition().x;
-//		hero.getBounds().y = hero.getPosition().y;
 		// transform velocity back into base units
 		hero.getVelocity().mul(1 / delta);	
 	}
@@ -170,7 +171,9 @@ public class HeroController {
 		collidable.clear();
 		for(int x = startX; x <= endX; x++) {
 			for(int y = startY; y <= endY; y++) {
-				collidable.add(world.getLevel().get(x, y));
+				if(x >= 0 && x < world.getLevel().getWidth() && y >=0 && y <= world.getLevel().getHeight()) {
+					collidable.add(world.getLevel().get(x, y));
+				}
 			}
 		}
 	}

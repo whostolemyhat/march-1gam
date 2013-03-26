@@ -26,8 +26,8 @@ public class WorldRenderer {
 
 	private SpriteBatch batch;
 	private boolean debug = false;
-	private int width;
-	private int height;
+	public int width;
+	public int height;
 	private float ppuX;
 	private float ppuY;
 	
@@ -47,6 +47,8 @@ public class WorldRenderer {
 		this.height = h;
 		ppuX = (float)width / CAMERA_WIDTH;
 		ppuY = (float)height / CAMERA_HEIGHT;
+		world.setPpuX(ppuX);
+		world.setPpuY(ppuY);
 	}
 	
 	public void render() {

@@ -33,7 +33,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor {
 	@Override
 	public void show() {
 		world = new World();
-		renderer = new WorldRenderer(world, true);
+		renderer = new WorldRenderer(world, false);
 		controller = new HeroController(world);
 		Gdx.input.setInputProcessor(this);
 	}

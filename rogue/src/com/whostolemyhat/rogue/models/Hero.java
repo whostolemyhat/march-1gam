@@ -14,7 +14,7 @@ public class Hero {
 	}
 	
 	public static final float SPEED = 4.0f;
-	public final float SIZE = 0.6f;
+	public final float SIZE = 0.5f;
 
 	Vector2 position = new Vector2();
 	Vector2 acceleration = new Vector2();
@@ -30,6 +30,8 @@ public class Hero {
 		this.position = position;
 		this.bounds.height = SIZE;
 		this.bounds.width = SIZE;
+		this.bounds.x = this.position.x;
+		this.bounds.y = this.position.y;
 		this.texture = new Texture(Gdx.files.internal("images/hero_01.png"));
 	}
 	
@@ -55,6 +57,8 @@ public class Hero {
 	
 	public void update(float delta) {
 		position.add(velocity.tmp().mul(delta));
+		bounds.x = position.x;
+		bounds.y = position.y;
 	}
 	
 	public void draw(SpriteBatch batch, float ppuX, float ppuY) {

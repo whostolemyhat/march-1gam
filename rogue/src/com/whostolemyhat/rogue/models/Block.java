@@ -18,6 +18,8 @@ public class Block {
 	
 	public Block(Vector2 pos) {
 		this.position = pos;
+		this.bounds.x = this.position.x;
+		this.bounds.y = this.position.y;
 		this.bounds.width = SIZE;
 		this.bounds.height = SIZE;
 		this.texture = new Texture(Gdx.files.internal("images/block.png"));
