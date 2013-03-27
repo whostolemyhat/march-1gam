@@ -84,12 +84,8 @@ public class HeroController {
 	
 	public void update(float delta) {
 		processInput();
-		
-//		checkCollisions();
-		hero.update(delta);
-//		Gdx.app.log(RogueGame.LOG, String.format("%f %f %f %f", hero.getBounds().x, hero.getBounds().y, hero.getBounds().x + hero.getVelocity().x, hero.getBounds().y + hero.getBounds().height));
-
 		checkCollisionWithBlocks(delta);
+		hero.update(delta);
 	} 
 	
 	// http://obviam.net/index.php/getting-started-in-android-game-development-with-libgdx-tutorial-part-4-collision-detection/
