@@ -7,7 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 
 public class Enemy extends Hero {
 
-	public Color debugColour = new Color(0, 0, 1, 1);
+	public Color debugColour = new Color(0, 1, 0, 0);
 	
 	public enum State {
 		IDLE, WALKING, ATTACKING
@@ -17,5 +17,6 @@ public class Enemy extends Hero {
 		super(position);
 		this.texture = new Texture(Gdx.files.internal("images/hero_01.png"));
 	}
+	
 
 }

@@ -16,7 +16,7 @@ public class World {
 	
 	Array<Block> blocks = new Array<Block>();
 	Hero hero;
-	Array<Enemy> enemies = new Array<Enemy>();
+//	Array<Enemy> enemies = new Array<Enemy>();
 	Array<Door> doors = new Array<Door>();
 	
 	Level level;
@@ -69,8 +69,8 @@ public class World {
 		return hero;
 	}
 	
-	public Array<Enemy> getEnemies() {
-		return enemies;
+	public ArrayList<Enemy> getEnemies() {
+		return getLevel().getEnemies();
 	}
 	
 	public Level getLevel() {
@@ -115,25 +115,7 @@ public class World {
 	
 	private void createDemoWorld() {
 		hero = new Hero(new Vector2(7, 2));
-//		enemies.add(new Enemy(new Vector2(10, 4)));
 		level = new Level();
-//		for(int i = 0; i < 20; i++) {
-//			if(i != 9) {
-//				blocks.add(new Block(new Vector2(i, 0)));
-//				blocks.add(new Block(new Vector2(i, 13)));
-//			}
-//		}
-//		for(int i = 0; i < 14; i++) {
-//			blocks.add(new Block(new Vector2(0, i)));
-//			blocks.add(new Block(new Vector2(19, i)));
-//		}
-//
-//		blocks.add(new Block(new Vector2(16, 3)));
-//		blocks.add(new Block(new Vector2(16, 4)));
-//		blocks.add(new Block(new Vector2(16, 5)));
-//		
-//		doors.add(new Door(new Vector2(9, 0)));
-//		doors.add(new Door(new Vector2(9, 13)));
 	}
 	
 }

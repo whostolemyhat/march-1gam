@@ -1,5 +1,7 @@
 package com.whostolemyhat.rogue.models;
 
+import java.util.ArrayList;
+
 import com.badlogic.gdx.math.Vector2;
 
 public class Level {
@@ -7,6 +9,7 @@ public class Level {
 	private int height;
 	private Block[][] blocks;
 	private Door[][] doors;
+	private ArrayList<Enemy> enemies = new ArrayList<Enemy>();
 	
 	public int getWidth() {
 		return width;
@@ -44,11 +47,18 @@ public class Level {
 		loadDemoLevel();
 	}
 	
+	public ArrayList<Enemy> getEnemies() {
+		return enemies;
+	}
+	
 	private void loadDemoLevel() {
 		width = 20;
 		height = 14;
 		blocks = new Block[width][height];
 		doors = new Door[width][height];
+		
+		enemies.add(new Enemy(new Vector2(10, 4)));
+		
 		for(int col = 0; col < width; col++) {
 			for(int row = 0; row < height; row++) {
 				blocks[col][row] = null;

@@ -68,7 +68,6 @@ public class WorldRenderer {
 	
 	private void drawBlocks() {
 		for(Block block : world.getDrawableBlocks(width, height)) {
-//		for(Block block : world.getBlocks()) {
 			block.draw(batch, ppuX, ppuY);
 		}
 	}
@@ -105,7 +104,6 @@ public class WorldRenderer {
 		debugRenderer.begin(ShapeType.Rectangle);
 		
 		for(Block block : world.getDrawableBlocks(width, height)) {
-//		for(Block block : world.getBlocks()) {
 			Rectangle rect = block.getBounds();
 			float x1 = block.getPosition().x + rect.x;
 			float y1 = block.getPosition().y + rect.y;
