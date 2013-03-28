@@ -4,14 +4,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool;
 import com.whostolemyhat.rogue.RogueGame;
 import com.whostolemyhat.rogue.models.Block;
+import com.whostolemyhat.rogue.models.Enemy;
 import com.whostolemyhat.rogue.models.Hero;
 import com.whostolemyhat.rogue.models.Hero.State;
 import com.whostolemyhat.rogue.models.World;
@@ -24,6 +22,7 @@ public class HeroController {
 	private World world;
 	private Hero hero;
 	private Array<Block> collidable = new Array<Block>();
+	private float COLLISION_DISTANCE = 0.2f;
 	
 	static Map<Keys, Boolean> keys = new HashMap<HeroController.Keys, Boolean>();
 	static {
@@ -85,6 +84,7 @@ public class HeroController {
 	public void update(float delta) {
 		processInput();
 		checkCollisionWithBlocks(delta);
+		checkCollisionWithEntities(delta);
 		hero.update(delta);
 	} 
 	
@@ -127,6 +127,11 @@ public class HeroController {
 			if(block != null) {
 				if(heroRect.overlaps(block.getBounds())) {
 					hero.getVelocity().x = 0; // if collided, movement = 0
+//					if(hero.getPosition().x < block.getPosition().x) {
+//						hero.getPosition().x -= COLLISION_DISTANCE;
+//					} else {
+//						hero.getPosition().x += COLLISION_DISTANCE;
+//					}
 					world.getCollisonRects().add(block.getBounds());
 					break;
 				}
@@ -149,6 +154,12 @@ public class HeroController {
 			if(block != null) {
 				if(heroRect.overlaps(block.getBounds())) {
 					hero.getVelocity().y = 0;
+					// reset pos
+//					if(hero.getPosition().y < block.getPosition().y) {
+//						hero.getPosition().y -= COLLISION_DISTANCE;
+//					} else {
+//						hero.getPosition().y += COLLISION_DISTANCE;
+//					}
 					world.getCollisonRects().add(block.getBounds());
 					break;
 				}
@@ -172,6 +183,44 @@ public class HeroController {
 				}
 			}
 		}
+	}
+	
+	private void checkCollisionWithEntities(float delta) {
+		// TODO: narrow to with x blocks
+		hero.getVelocity().mul(delta);
+		Rectangle heroRect = rectPool.obtain();
+		heroRect.set(
+				hero.getBounds().x, 
+				hero.getBounds().y, 
+				hero.getBounds().width, 
+				hero.getBounds().height
+				);
+		for(Enemy enemy : world.getLevel().getEnemies()) {
+			heroRect.x += hero.getVelocity().x;
+			heroRect.y += hero.getVelocity().y;
+			if(heroRect.overlaps(enemy.getBounds())) {
+				hero.getVelocity().x = hero.getVelocity().y = 0;
+				// reset position
+				if(hero.getPosition().x < enemy.getPosition().x) {
+					hero.getPosition().x -= COLLISION_DISTANCE;
+				} else {
+					hero.getPosition().x += COLLISION_DISTANCE;
+				}
+				if(hero.getPosition().y < enemy.getPosition().y) {
+					hero.getPosition().y -= COLLISION_DISTANCE;
+				} else {
+					hero.getPosition().y += COLLISION_DISTANCE;
+				}
+				world.getCollisonRects().add(enemy.getBounds());
+				break;
+			}
+		}
+		heroRect.y = hero.getPosition().y;
+		hero.getPosition().add(hero.getVelocity());
+		hero.getBounds().x = hero.getPosition().x;
+		hero.getBounds().y = hero.getPosition().y;
+		hero.getVelocity().mul(1 / delta);
+		
 	}
 	
 	private void processInput() {
@@ -217,6 +266,7 @@ public class HeroController {
 		
 		if(keys.get(Keys.SHOOT)) {
 			Gdx.app.log(RogueGame.LOG, "Shooting!");
+			world.getLevel().projectiles().add(new Projectile());
 		}
 	}
 }

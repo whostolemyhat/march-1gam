@@ -10,6 +10,7 @@ public class Level {
 	private Block[][] blocks;
 	private Door[][] doors;
 	private ArrayList<Enemy> enemies = new ArrayList<Enemy>();
+	public ArrayList<Projectile> projectiles = new ArrayList<Projectile>();
 	
 	public int getWidth() {
 		return width;
