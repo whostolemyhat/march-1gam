@@ -73,6 +73,10 @@ public class World {
 		return getLevel().getEnemies();
 	}
 	
+	public ArrayList<Projectile> getProjectiles() {
+		return getLevel().getProjectiles();
+	}
+	
 	public Level getLevel() {
 		return level;
 	}

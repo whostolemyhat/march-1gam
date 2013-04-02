@@ -9,9 +9,9 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Rectangle;
 import com.whostolemyhat.rogue.RogueGame;
 import com.whostolemyhat.rogue.models.Block;
-import com.whostolemyhat.rogue.models.Door;
 import com.whostolemyhat.rogue.models.Enemy;
 import com.whostolemyhat.rogue.models.Hero;
+import com.whostolemyhat.rogue.models.Projectile;
 import com.whostolemyhat.rogue.models.World;
 
 public class WorldRenderer {
@@ -57,6 +57,7 @@ public class WorldRenderer {
 //		drawDoors();
 		drawHero();
 		drawEnemies();
+		drawProjectiles();
 		batch.end();
 		
 		drawCollisionBlocks();
@@ -86,6 +87,19 @@ public class WorldRenderer {
 	private void drawEnemies() {
 		for(Enemy enemy : world.getEnemies()) {
 			enemy.draw(batch, ppuX, ppuY);
+		}
+	}
+	
+	private void drawProjectiles() {
+		for(Projectile projectile : world.getProjectiles()) {
+			projectile.draw(batch, ppuX, ppuY);
+			Gdx.app.log(RogueGame.LOG, projectile.getPosition().toString());
+//			debugRenderer.setProjectionMatrix(cam.combined);
+//			debugRenderer.begin(ShapeType.FilledCircle);
+//			debugRenderer.setColor(new Color(1, 1, 1, 1));
+//			debugRenderer.filledCircle(projectile.getPosition().x * ppuX, projectile.getPosition().y * ppuY, 0.5f);
+//			debugRenderer.end();
+//			Gdx.app.log(RogueGame.LOG, String.format("%f, %f", projectile.getPosition().x, projectile.getPosition().y));
 		}
 	}
 	

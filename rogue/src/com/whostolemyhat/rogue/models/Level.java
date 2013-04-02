@@ -52,6 +52,10 @@ public class Level {
 		return enemies;
 	}
 	
+	public ArrayList<Projectile> getProjectiles() {
+		return projectiles;
+	}
+	
 	private void loadDemoLevel() {
 		width = 20;
 		height = 14;

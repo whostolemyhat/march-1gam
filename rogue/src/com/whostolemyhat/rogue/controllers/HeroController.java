@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool;
 import com.whostolemyhat.rogue.RogueGame;
@@ -12,6 +13,7 @@ import com.whostolemyhat.rogue.models.Block;
 import com.whostolemyhat.rogue.models.Enemy;
 import com.whostolemyhat.rogue.models.Hero;
 import com.whostolemyhat.rogue.models.Hero.State;
+import com.whostolemyhat.rogue.models.Projectile;
 import com.whostolemyhat.rogue.models.World;
 
 public class HeroController {
@@ -86,6 +88,10 @@ public class HeroController {
 		checkCollisionWithBlocks(delta);
 		checkCollisionWithEntities(delta);
 		hero.update(delta);
+		// TODO: shouldn't be in hero controller
+		for(Projectile p : world.getLevel().getProjectiles()) {
+			p.update(delta);
+		}
 	} 
 	
 	// http://obviam.net/index.php/getting-started-in-android-game-development-with-libgdx-tutorial-part-4-collision-detection/
@@ -212,6 +218,9 @@ public class HeroController {
 					hero.getPosition().y += COLLISION_DISTANCE;
 				}
 				world.getCollisonRects().add(enemy.getBounds());
+				
+				Gdx.app.log(RogueGame.LOG, "You died!");
+				
 				break;
 			}
 		}
@@ -220,7 +229,6 @@ public class HeroController {
 		hero.getBounds().x = hero.getPosition().x;
 		hero.getBounds().y = hero.getPosition().y;
 		hero.getVelocity().mul(1 / delta);
-		
 	}
 	
 	private void processInput() {
@@ -266,7 +274,7 @@ public class HeroController {
 		
 		if(keys.get(Keys.SHOOT)) {
 			Gdx.app.log(RogueGame.LOG, "Shooting!");
-			world.getLevel().projectiles().add(new Projectile());
+			world.getLevel().projectiles.add(new Projectile(hero.getPosition(), new Vector2(0, -1)));
 		}
 	}
 }
