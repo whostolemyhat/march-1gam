@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.utils.Pool;
 import com.whostolemyhat.rogue.RogueGame;
 import com.whostolemyhat.rogue.models.Block;
 import com.whostolemyhat.rogue.models.Enemy;
@@ -57,7 +58,7 @@ public class WorldRenderer {
 //		drawDoors();
 		drawHero();
 		drawEnemies();
-		drawProjectiles();
+//		drawProjectiles();
 		batch.end();
 		
 		drawCollisionBlocks();
@@ -89,19 +90,32 @@ public class WorldRenderer {
 			enemy.draw(batch, ppuX, ppuY);
 		}
 	}
+//	
+//	private void drawProjectiles() {
+//		for(Projectile projectile : world.getProjectiles()) {
+//			projectile.draw(batch, ppuX, ppuY);
+//		}
+//	}
 	
-	private void drawProjectiles() {
-		for(Projectile projectile : world.getProjectiles()) {
-			projectile.draw(batch, ppuX, ppuY);
-			Gdx.app.log(RogueGame.LOG, projectile.getPosition().toString());
-//			debugRenderer.setProjectionMatrix(cam.combined);
-//			debugRenderer.begin(ShapeType.FilledCircle);
-//			debugRenderer.setColor(new Color(1, 1, 1, 1));
-//			debugRenderer.filledCircle(projectile.getPosition().x * ppuX, projectile.getPosition().y * ppuY, 0.5f);
-//			debugRenderer.end();
-//			Gdx.app.log(RogueGame.LOG, String.format("%f, %f", projectile.getPosition().x, projectile.getPosition().y));
+	private Pool<Rectangle> rectPool = new Pool<Rectangle>() {
+		@Override
+		protected Rectangle newObject() {
+			return new Rectangle();
 		}
-	}
+	};
+	
+//	private void projectileCollision(float delta) {
+//		Rectangle collisionRect = rectPool.obtain();
+//		for(Projectile projectile : world.getProjectiles()) {
+//			projectile.getVelocity().mul(delta);
+//			collisionRect.set(
+//					projectile.getBounds().x, 
+//					projectile.getBounds().y, 
+//					projectile.getBounds().width, 
+//					projectile.getBounds().height
+//					);
+//		}
+//	}
 	
 	private void drawCollisionBlocks() {
 		debugRenderer.setProjectionMatrix(cam.combined);
@@ -112,6 +126,11 @@ public class WorldRenderer {
 		}
 		debugRenderer.end();
 	}
+	
+//	private boolean inBounds(Projectile entity) {
+//		return (entity.getBounds().x > 0) && (entity.getBounds().x < width + entity.getBounds().width) 
+//				&& (entity.getBounds().y > 0) && (entity.getBounds().y < height + entity.getBounds().height);
+//	}
 	
 	private void drawDebug() {
 		debugRenderer.setProjectionMatrix(cam.combined);

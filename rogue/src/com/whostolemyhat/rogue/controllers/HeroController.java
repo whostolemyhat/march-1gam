@@ -12,6 +12,7 @@ import com.whostolemyhat.rogue.RogueGame;
 import com.whostolemyhat.rogue.models.Block;
 import com.whostolemyhat.rogue.models.Enemy;
 import com.whostolemyhat.rogue.models.Hero;
+import com.whostolemyhat.rogue.models.Hero.Direction;
 import com.whostolemyhat.rogue.models.Hero.State;
 import com.whostolemyhat.rogue.models.Projectile;
 import com.whostolemyhat.rogue.models.World;
@@ -89,9 +90,9 @@ public class HeroController {
 		checkCollisionWithEntities(delta);
 		hero.update(delta);
 		// TODO: shouldn't be in hero controller
-		for(Projectile p : world.getLevel().getProjectiles()) {
-			p.update(delta);
-		}
+//		for(Projectile p : world.getLevel().getProjectiles()) {
+//			p.update(delta);
+//		}
 	} 
 	
 	// http://obviam.net/index.php/getting-started-in-android-game-development-with-libgdx-tutorial-part-4-collision-detection/
@@ -220,7 +221,7 @@ public class HeroController {
 				world.getCollisonRects().add(enemy.getBounds());
 				
 				Gdx.app.log(RogueGame.LOG, "You died!");
-				
+				// hit any enemy, don't need to check any others
 				break;
 			}
 		}
@@ -234,21 +235,25 @@ public class HeroController {
 	private void processInput() {
 		if(keys.get(Keys.LEFT)) {
 			hero.setState(State.WALKING);
+			hero.setDirection(Direction.LEFT);
 			hero.getVelocity().x = -Hero.SPEED;
 		}
 		
 		if(keys.get(Keys.RIGHT)) {
 			hero.setState(State.WALKING);
+			hero.setDirection(Direction.RIGHT);
 			hero.getVelocity().x = Hero.SPEED;
 		}
 		
 		if(keys.get(Keys.UP)) {
 			hero.setState(State.WALKING);
+			hero.setDirection(Direction.UP);
 			hero.getVelocity().y = Hero.SPEED;
 		}
 		
 		if(keys.get(Keys.DOWN)) {
 			hero.setState(State.WALKING);
+			hero.setDirection(Direction.DOWN);
 			hero.getVelocity().y = -Hero.SPEED;
 		}
 		
@@ -273,8 +278,8 @@ public class HeroController {
 		}
 		
 		if(keys.get(Keys.SHOOT)) {
-			Gdx.app.log(RogueGame.LOG, "Shooting!");
-			world.getLevel().projectiles.add(new Projectile(hero.getPosition(), new Vector2(0, -1)));
+			hero.attack(world);
+			
 		}
 	}
 }
