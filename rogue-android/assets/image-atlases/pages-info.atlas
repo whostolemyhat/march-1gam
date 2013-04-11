@@ -1,0 +1,40 @@
+
+pages-info.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+grass-tiles-2-small
+  rotate: false
+  xy: 0, 292
+  size: 384, 192
+  orig: 384, 192
+  offset: 0, 0
+  index: -1
+tree2-final
+  rotate: false
+  xy: 0, 34
+  size: 256, 256
+  orig: 256, 256
+  offset: 0, 0
+  index: -1
+littleshrooms
+  rotate: false
+  xy: 386, 444
+  size: 32, 40
+  orig: 32, 40
+  offset: 0, 0
+  index: 0
+qubodup-bush
+  rotate: false
+  xy: 0, 0
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 0
+qubodup-bush_berries
+  rotate: false
+  xy: 258, 258
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 0

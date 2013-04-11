@@ -2,8 +2,11 @@ package com.whostolemyhat.rogue.models;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Pool;
@@ -110,13 +113,24 @@ public class Hero {
 		default:
 			break;
 		}
+		
+		ShapeRenderer shapeRenderer = new ShapeRenderer();
+		OrthographicCamera camera = new OrthographicCamera(20f, 14f);
+		camera.position.set(20f / 2f, 14f / 2f, 0);
+		camera.update();
+		shapeRenderer.setProjectionMatrix(camera.combined);
+		shapeRenderer.begin(ShapeType.FilledRectangle);
+		shapeRenderer.setColor(new Color(1,1,1,1));
+		shapeRenderer.filledRect(weaponRect.x, weaponRect.y, weaponRect.width, weaponRect.height);
+		shapeRenderer.end();
+		
 		// check collision
 		for(Enemy enemy : world.getLevel().getEnemies()) {
-			weaponRect.x += this.getVelocity().x;
-			weaponRect.y += this.getVelocity().y;
+//			weaponRect.x += this.getVelocity().x;
+//			weaponRect.y += this.getVelocity().y;
 			if(weaponRect.overlaps(enemy.getBounds())) {
 				world.getCollisonRects().add(enemy.getBounds());
-				
+				 
 				Gdx.app.log(RogueGame.LOG, "Hit enemy!");
 			}
 		}
