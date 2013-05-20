@@ -1,11 +1,11 @@
 package com.whostolemyhat.rogue.controllers;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool;
 import com.whostolemyhat.rogue.RogueGame;
@@ -14,7 +14,6 @@ import com.whostolemyhat.rogue.models.Enemy;
 import com.whostolemyhat.rogue.models.Hero;
 import com.whostolemyhat.rogue.models.Hero.Direction;
 import com.whostolemyhat.rogue.models.Hero.State;
-import com.whostolemyhat.rogue.models.Projectile;
 import com.whostolemyhat.rogue.models.World;
 
 public class HeroController {
@@ -26,6 +25,7 @@ public class HeroController {
 	private Hero hero;
 	private Array<Block> collidable = new Array<Block>();
 	private float COLLISION_DISTANCE = 0.2f;
+	private boolean shootPressed = false;
 	
 	static Map<Keys, Boolean> keys = new HashMap<HeroController.Keys, Boolean>();
 	static {
@@ -77,11 +77,15 @@ public class HeroController {
 	}
 	
 	public void shootPressed() {
-		keys.get(keys.put(Keys.SHOOT, true));
+		if(!shootPressed) {
+			keys.get(keys.put(Keys.SHOOT, true));
+			shootPressed = true;
+		}
 	}
 	
 	public void shootReleased() {
 		keys.get(keys.put(Keys.SHOOT, false));
+		shootPressed = false;
 	}
 	
 	public void update(float delta) {
@@ -89,6 +93,19 @@ public class HeroController {
 		checkCollisionWithBlocks(delta);
 		checkCollisionWithEntities(delta);
 		hero.update(delta);
+		
+		// TODO: lol this shouldn't be here
+		ArrayList<Enemy> newEnemies = new ArrayList<Enemy>();
+		for(Enemy e : world.getLevel().getEnemies()) {
+			if(e.active) {
+				newEnemies.add(e);
+			}
+		}
+		world.getLevel().enemies = newEnemies;
+		// TODO: lol this shouldn't be here
+		for(Enemy e : world.getLevel().getEnemies()) {
+			e.update(delta);
+		}
 		// TODO: shouldn't be in hero controller
 //		for(Projectile p : world.getLevel().getProjectiles()) {
 //			p.update(delta);
@@ -277,9 +294,11 @@ public class HeroController {
 			hero.getVelocity().y = 0;
 		}
 		
-		if(keys.get(Keys.SHOOT)) {
-			hero.attack(world);
-			
+//		if(keys.get(Keys.SHOOT)) {
+		if(shootPressed) {
+			hero.attack(world);	
+			shootPressed = false;
 		}
+		
 	}
 }

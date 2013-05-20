@@ -9,7 +9,7 @@ public class Level {
 	private int height;
 	private Block[][] blocks;
 	private Door[][] doors;
-	private ArrayList<Enemy> enemies = new ArrayList<Enemy>();
+	public ArrayList<Enemy> enemies = new ArrayList<Enemy>();
 //	public ArrayList<Projectile> projectiles = new ArrayList<Projectile>();
 	
 	public int getWidth() {
@@ -50,6 +50,10 @@ public class Level {
 	
 	public ArrayList<Enemy> getEnemies() {
 		return enemies;
+	}
+	
+	public void removeEnemy(int index) {
+		enemies.remove(index);
 	}
 	
 //	public ArrayList<Projectile> getProjectiles() {

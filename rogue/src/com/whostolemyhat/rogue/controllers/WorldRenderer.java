@@ -90,7 +90,9 @@ public class WorldRenderer {
 			enemy.draw(batch, ppuX, ppuY);
 		}
 	}
-//	
+	
+
+
 //	private void drawProjectiles() {
 //		for(Projectile projectile : world.getProjectiles()) {
 //			projectile.draw(batch, ppuX, ppuY);

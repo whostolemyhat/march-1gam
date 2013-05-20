@@ -18,11 +18,11 @@ public class Hero {
 		IDLE, WALKING, DYING
 	}
 	
-	public enum Direction {
+	public static enum Direction {
 		UP, DOWN, LEFT, RIGHT
 	}
 	
-	public static final float SPEED = 3.0f;
+	public static final float SPEED = 2.0f;
 	public final float SIZE = 0.5f;
 
 	Vector2 position = new Vector2();
@@ -33,6 +33,8 @@ public class Hero {
 	// direction of bullets
 	public Direction direction = Direction.LEFT;
 	int health = 6; // 1 health = 1/2 heart
+	
+	Weapon weapon = new Weapon();
 	
 	public Color debugColour = new Color(1, 0, 0, 1);
 	public Texture texture;
@@ -126,12 +128,9 @@ public class Hero {
 		
 		// check collision
 		for(Enemy enemy : world.getLevel().getEnemies()) {
-//			weaponRect.x += this.getVelocity().x;
-//			weaponRect.y += this.getVelocity().y;
 			if(weaponRect.overlaps(enemy.getBounds())) {
 				world.getCollisonRects().add(enemy.getBounds());
-				 
-				Gdx.app.log(RogueGame.LOG, "Hit enemy!");
+				enemy.hit(this.direction, this.weapon);
 			}
 		}
 		// deal damage
@@ -153,5 +152,9 @@ public class Hero {
 	
 	public void setHealth(int newHealth) {
 		this.health = newHealth;
+	}
+	
+	public void die() {
+		Gdx.app.log(RogueGame.LOG, "You are dead");
 	}
 }
