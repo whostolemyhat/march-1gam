@@ -81,10 +81,10 @@ public class Level {
 		}
 		
 		for(int col = 0; col < width; col++) {
-			if(col != 9) {
+//			if(col != 9) {
 				blocks[col][0] = new Block(new Vector2(col, 0));
 				blocks[col][13] = new Block(new Vector2(col, 13));
-			}
+//			}
 		}
 		for(int row = 0; row < height; row++) {
 			blocks[0][row] = new Block(new Vector2(0, row));
@@ -95,8 +95,8 @@ public class Level {
 		blocks[16][4] = new Block(new Vector2(16, 4));
 		blocks[16][5] = new Block(new Vector2(16, 5));
 		
-		doors[9][0] = new Door(new Vector2(9, 0));
-		doors[9][13] = new Door(new Vector2(9, 13));
+//		doors[9][0] = new Door(new Vector2(9, 0));
+//		doors[9][13] = new Door(new Vector2(9, 13));
 	}
 
 	public Block get(int x, int y) {

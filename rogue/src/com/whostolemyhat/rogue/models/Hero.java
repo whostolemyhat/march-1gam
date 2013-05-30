@@ -15,7 +15,7 @@ import com.whostolemyhat.rogue.RogueGame;
 public class Hero {
 	
 	public enum State {
-		IDLE, WALKING, DYING
+		IDLE, WALKING, DYING, JUMPING
 	}
 	
 	public static enum Direction {
@@ -52,6 +52,10 @@ public class Hero {
 		return position;
 	}
 	
+	public void setPosition(Vector2 position) {
+		this.position = position;
+	}
+	
 	public Rectangle getBounds() {
 		return bounds;
 	}
@@ -62,6 +66,10 @@ public class Hero {
 	
 	public Vector2 getAcceleration() {
 		return acceleration;
+	}
+	
+	public State getState() {
+		return this.state;
 	}
 	
 	public void setState(State newState) {

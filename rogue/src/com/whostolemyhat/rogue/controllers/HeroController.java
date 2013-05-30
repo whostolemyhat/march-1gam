@@ -18,7 +18,7 @@ import com.whostolemyhat.rogue.models.World;
 
 public class HeroController {
 	enum Keys {
-		LEFT, RIGHT, UP, DOWN, SHOOT
+		LEFT, RIGHT, JUMP, DOWN, SHOOT
 	}
 	
 	private World world;
@@ -27,11 +27,21 @@ public class HeroController {
 	private float COLLISION_DISTANCE = 0.2f;
 	private boolean shootPressed = false;
 	
+	private boolean jumpPressed = false;
+	private long jumpPressedTime;
+	private static final long LONG_JUMP_PRESS = 150l;
+	private static final float ACCELERATION = 20f;
+	private static final float GRAVITY = -20f;
+	private static final float MAX_JUMP_SPEED = 7f;
+	private static final float DAMP = 0.90f;
+	private static final float MAX_VEL = 4f;
+	
+	
 	static Map<Keys, Boolean> keys = new HashMap<HeroController.Keys, Boolean>();
 	static {
 		keys.put(Keys.LEFT, false);
 		keys.put(Keys.RIGHT, false);
-		keys.put(Keys.UP, false);
+		keys.put(Keys.JUMP, false);
 		keys.put(Keys.DOWN, false);
 		keys.put(Keys.SHOOT, false);
 	};
@@ -61,11 +71,11 @@ public class HeroController {
 	}
 	
 	public void upPressed() {
-		keys.get(keys.put(Keys.UP, true));
+		keys.get(keys.put(Keys.JUMP, true));
 	}
 	
 	public void upReleased() {
-		keys.get(keys.put(Keys.UP, false));
+		keys.get(keys.put(Keys.JUMP, false));
 	}
 	
 	public void downPressed() {
@@ -90,6 +100,38 @@ public class HeroController {
 	
 	public void update(float delta) {
 		processInput();
+		
+		hero.getAcceleration().y = GRAVITY;
+		hero.getAcceleration().mul(delta);
+		hero.getVelocity().add(hero.getAcceleration().x, hero.getAcceleration().y);
+		if(hero.getAcceleration().x == 0) {
+			hero.getVelocity().x *= DAMP;
+		}
+		if(hero.getVelocity().x > MAX_VEL) {
+			hero.getVelocity().x = MAX_VEL;
+		}
+		if(hero.getVelocity().x < -MAX_VEL) {
+			hero.getVelocity().x = -MAX_VEL;
+		}
+		
+		if(hero.getPosition().y < 0) {
+			hero.getPosition().y = 0;
+			hero.setPosition(hero.getPosition());
+			if(hero.getState().equals(State.JUMPING)) {
+				hero.setState(State.IDLE);
+			}
+		}
+		
+		if(hero.getPosition().x < 0) {
+			hero.getPosition().x = 0;
+			hero.setPosition(hero.getPosition());
+			if(!hero.getState().equals(State.JUMPING)) {
+				hero.setState(State.IDLE);
+			}
+		}
+		
+		
+		
 		checkCollisionWithBlocks(delta);
 		checkCollisionWithEntities(delta);
 		hero.update(delta);
@@ -262,21 +304,35 @@ public class HeroController {
 			hero.getVelocity().x = Hero.SPEED;
 		}
 		
-		if(keys.get(Keys.UP)) {
-			hero.setState(State.WALKING);
-			hero.setDirection(Direction.UP);
-			hero.getVelocity().y = Hero.SPEED;
+		if(keys.get(Keys.JUMP)) {
+			if(!hero.getState().equals(State.JUMPING)) {
+				hero.setState(State.JUMPING);
+				jumpPressed = true;
+				jumpPressedTime = System.currentTimeMillis();
+				hero.getVelocity().y = MAX_JUMP_SPEED;
+			} else {
+				if(jumpPressed && ((System.currentTimeMillis() - jumpPressedTime) >= LONG_JUMP_PRESS)) {
+					jumpPressed = false;
+				} else {
+					if(jumpPressed) {
+						hero.getVelocity().y = MAX_JUMP_SPEED;
+					}
+				}
+			}
+			
+//			hero.setDirection(Direction.UP);
+//			hero.getVelocity().y = Hero.SPEED;
 		}
 		
-		if(keys.get(Keys.DOWN)) {
-			hero.setState(State.WALKING);
-			hero.setDirection(Direction.DOWN);
-			hero.getVelocity().y = -Hero.SPEED;
-		}
+//		if(keys.get(Keys.DOWN)) {
+//			hero.setState(State.WALKING);
+//			hero.setDirection(Direction.DOWN);
+//			hero.getVelocity().y = -Hero.SPEED;
+//		}
 		
 		if((keys.get(Keys.LEFT) && keys.get(Keys.RIGHT)) ||
-			(keys.get(Keys.UP) && keys.get(Keys.DOWN)) ||
-			(!keys.get(Keys.LEFT) && !keys.get(Keys.RIGHT) && !keys.get(Keys.UP) && !keys.get(Keys.DOWN))) {
+			(keys.get(Keys.JUMP) && keys.get(Keys.DOWN)) ||
+			(!keys.get(Keys.LEFT) && !keys.get(Keys.RIGHT) && !keys.get(Keys.JUMP) && !keys.get(Keys.DOWN))) {
 				hero.setState(State.IDLE);
 				hero.getAcceleration().x = 0;
 				hero.getAcceleration().y = 0;
@@ -289,7 +345,7 @@ public class HeroController {
 			hero.getVelocity().x = 0;
 		}
 		
-		if(!keys.get(Keys.UP) && !keys.get(Keys.DOWN)) {
+		if(!keys.get(Keys.JUMP) && !keys.get(Keys.DOWN)) {
 			hero.getAcceleration().y = 0;
 			hero.getVelocity().y = 0;
 		}
