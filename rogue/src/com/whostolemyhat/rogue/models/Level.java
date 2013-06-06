@@ -66,7 +66,8 @@ public class Level {
 		blocks = new Block[width][height];
 		doors = new Door[width][height];
 		
-		enemies.add(new Enemy(new Vector2(10, 4)));
+		enemies.add(new Enemy(new Vector2(10, 1)));
+		enemies.add(new Enemy(new Vector2(7, 8)));
 		
 		for(int col = 0; col < width; col++) {
 			for(int row = 0; row < height; row++) {
@@ -81,19 +82,32 @@ public class Level {
 		}
 		
 		for(int col = 0; col < width; col++) {
-//			if(col != 9) {
-				blocks[col][0] = new Block(new Vector2(col, 0));
-				blocks[col][13] = new Block(new Vector2(col, 13));
-//			}
+			blocks[col][0] = new Block(new Vector2(col, 0));
+			blocks[col][13] = new Block(new Vector2(col, 13));
 		}
 		for(int row = 0; row < height; row++) {
 			blocks[0][row] = new Block(new Vector2(0, row));
 			blocks[19][row] = new Block(new Vector2(19, row));
 		}
-	
+
+		blocks[14][2] = new Block(new Vector2(14, 2));
+		blocks[15][3] = new Block(new Vector2(15, 3));
 		blocks[16][3] = new Block(new Vector2(16, 3));
 		blocks[16][4] = new Block(new Vector2(16, 4));
-		blocks[16][5] = new Block(new Vector2(16, 5));
+		blocks[17][5] = new Block(new Vector2(17, 5));
+
+		blocks[15][7] = new Block(new Vector2(15, 7));
+		blocks[14][7] = new Block(new Vector2(14, 7));
+		blocks[13][7] = new Block(new Vector2(13, 7));
+		blocks[12][7] = new Block(new Vector2(12, 7));
+		blocks[11][7] = new Block(new Vector2(11, 7));
+		blocks[11][8] = new Block(new Vector2(11, 8));
+		blocks[10][7] = new Block(new Vector2(10, 7));
+		blocks[9][7] = new Block(new Vector2(9, 7));
+		blocks[8][7] = new Block(new Vector2(8, 7));
+		blocks[7][7] = new Block(new Vector2(7, 7));
+		blocks[6][7] = new Block(new Vector2(6, 7));
+		blocks[6][8] = new Block(new Vector2(6, 8));
 		
 //		doors[9][0] = new Door(new Vector2(9, 0));
 //		doors[9][13] = new Door(new Vector2(9, 13));

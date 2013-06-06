@@ -28,17 +28,17 @@ public class HeroController {
 	private World world;
 	private Hero hero;
 	private Array<Block> collidable = new Array<Block>();
-	private float COLLISION_DISTANCE = 0.2f;
+	private float COLLISION_DISTANCE = 1f;
 	private boolean shootPressed = false;
 	
 	private boolean jumpPressed = false;
 	private long jumpPressedTime;
-	private static final long LONG_JUMP_PRESS = 150l;
-//	private static final float ACCELERATION = 20f;
+	private static final long LONG_JUMP_PRESS = 160l;
+//	private static final float ACCELERATION = 50f;
 	private static final float GRAVITY = -20f;
 	private static final float MAX_JUMP_SPEED = 7f;
-//	private static final float DAMP = 0.90f;
-//	private static final float MAX_VEL = 4f;
+//	private static final float DAMP = 0.10f;
+//	private static final float MAX_VEL = 10f;
 	private boolean grounded = false;
 	
 	
@@ -106,53 +106,30 @@ public class HeroController {
 	public void update(float delta) {
 		processInput();
 		
-//		if(grounded && hero.getState().equals(State.JUMPING)) {
-		if(grounded) {
+		if(grounded && hero.getState().equals(State.JUMPING)) {
+//		if(grounded) {
 			hero.setState(State.IDLE);
 		}
-		
 		hero.getAcceleration().y = GRAVITY;
+
 		hero.getAcceleration().mul(delta);
 		hero.getVelocity().add(hero.getAcceleration().x, hero.getAcceleration().y);
-//		if(hero.getAcceleration().x == 0) {
-//			hero.getVelocity().x *= DAMP;
-//		}
-//		if(hero.getVelocity().x > MAX_VEL) {
-//			hero.getVelocity().x = MAX_VEL;
-//		}
-//		if(hero.getVelocity().x < -MAX_VEL) {
-//			hero.getVelocity().x = -MAX_VEL;
-//		}
 		
 		// update pos then check whether out of bounds
 		checkCollisionWithBlocks(delta);
 //		checkCollisionWithEntities(delta);
+		
+//		hero.getVelocity().x *= DAMP;
+//		if(hero.getVelocity().x > MAX_VEL) {
+//			hero.getVelocity().x = MAX_VEL;
+//		}
+//		if(hero.getVelocity().x <= -MAX_VEL) {
+//			hero.getVelocity().x = -MAX_VEL;
+//		}
+		
 		hero.update(delta);
-		
-		if(hero.getPosition().y + hero.getBounds().height < 0) {
-			hero.getPosition().y = 0 + hero.getBounds().height;
-			hero.setPosition(hero.getPosition());
-//			if(hero.getState().equals(State.JUMPING)) {
-				hero.setState(State.IDLE);
-//			}
-		}
-		
-		if(hero.getPosition().x < 0) {
-			hero.getPosition().x = 0;
-			hero.setPosition(hero.getPosition());
-//			if(!hero.getState().equals(State.JUMPING)) {
-				hero.setState(State.IDLE);
-//			}
-		}
-		
-		if(hero.getPosition().x > world.getLevel().getWidth() - hero.getBounds().width) {
-			hero.getPosition().x = world.getLevel().getWidth() - hero.getBounds().width;
-			hero.setPosition(hero.getPosition());
-//			if(!hero.getState().equals(State.JUMPING)) {
-				hero.setState(State.IDLE);
-//			}
-		}
-		
+
+//		
 		// TODO: lol this shouldn't be here
 		ArrayList<Enemy> newEnemies = new ArrayList<Enemy>();
 		for(Enemy e : world.getLevel().getEnemies()) {
@@ -181,112 +158,104 @@ public class HeroController {
 	};
 	
 	private void checkCollisionWithBlocks(float delta) {
-		// velocity relative to time
+		// scale velocity to frame units 
 		hero.getVelocity().mul(delta);
-		// get rect to use for collisions
+		
+		// Obtain the rectangle from the pool instead of instantiating it
 		Rectangle heroRect = rectPool.obtain();
-		// set collision rect to hero pos	
-		heroRect.set(
-				hero.getBounds().x - (hero.SIZE / 2), 
-				hero.getBounds().y - (hero.SIZE / 2),
-				hero.SIZE * 2, 
-				hero.SIZE * 2
-				);
+		// set the rectangle to bob's bounding box
+		heroRect.set(hero.getBounds().x, hero.getBounds().y, hero.getBounds().width, hero.getBounds().height);
 		
+		// we first check the movement on the horizontal X axis
 		int startX, endX;
-		int startY = (int)hero.getBounds().y;
-		int endY = (int)(hero.getBounds().y + hero.getBounds().height);
-		// going left
-		if(hero.getVelocity().x < 0) {
-			startX = endX = (int)Math.floor(hero.getBounds().x + (hero.getVelocity().x * 3));
+		int startY = (int) hero.getBounds().y;
+		int endY = (int) (hero.getBounds().y + hero.getBounds().height);
+		// if Bob is heading left then we check if he collides with the block on his left
+		// we check the block on his right otherwise
+		if (hero.getVelocity().x < 0) {
+			startX = endX = (int) Math.floor(hero.getBounds().x + hero.getVelocity().x);
 		} else {
-			// going right
-			startX = endX = (int)Math.floor(hero.getBounds().x + hero.getBounds().width + (hero.getVelocity().x * 3));
+			startX = endX = (int) Math.floor(hero.getBounds().x + hero.getBounds().width + hero.getVelocity().x);
 		}
+
+		// get the block(s) bob can collide with
 		populateCollidableBlocks(startX, startY, endX, endY);
-		
+
+		// simulate bob's movement on the X
 		heroRect.x += hero.getVelocity().x;
-		world.getCollisonRects().clear();
-		for(Block block : collidable) {
-			if(block != null) {
-				if(heroRect.overlaps(block.getBounds())) {
-					
-					hero.getVelocity().x = 0; // if collided, movement = 0
-//					if(hero.getPosition().x < block.getPosition().x) {
-//						hero.getPosition().x -= COLLISION_DISTANCE;
-//					} else {
-//						hero.getPosition().x += COLLISION_DISTANCE;
-//					}
-					world.getCollisonRects().add(block.getBounds());
-					break;
-				}
+		
+		// clear collision boxes in world
+		world.getCollisionRects().clear();
+		
+		// if bob collides, make his horizontal velocity 0
+		for (Block block : collidable) {
+			if (block == null) continue;
+			if (heroRect.overlaps(block.getBounds())) {
+				hero.getVelocity().x = 0;
+				world.getCollisionRects().add(block.getBounds());
+				break;
 			}
 		}
-		ShapeRenderer shapeRenderer = new ShapeRenderer();
-		OrthographicCamera camera = new OrthographicCamera(20f, 14f);
-		camera.position.set(20f / 2f, 14f / 2f, 0);
-		camera.update();
-		shapeRenderer.setProjectionMatrix(camera.combined);
-		shapeRenderer.begin(ShapeType.FilledRectangle);
-		shapeRenderer.setColor(new Color(1,1,1,1));
-		shapeRenderer.filledRect(heroRect.x, heroRect.y, heroRect.width, heroRect.height);
-		shapeRenderer.end();
-		
-		// reset bounding box rect to hero position
+
+		// reset the x position of the collision box
 		heroRect.x = hero.getPosition().x;
 		
-		startX = (int)hero.getBounds().x;
-		endX = (int)(hero.getBounds().x + hero.getBounds().width);
-	
-		if(hero.getVelocity().y < 0) {
-			// if going down
-			startY = endY = (int)Math.floor(heroRect.y - hero.getVelocity().y);
+		// the same thing but on the vertical Y axis
+		startX = (int) hero.getBounds().x;
+		endX = (int) (hero.getBounds().x + hero.getBounds().width);
+		if (hero.getVelocity().y < 0) {
+			startY = endY = (int) Math.floor(hero.getBounds().y + hero.getVelocity().y);
 		} else {
-			startY = endY = (int)Math.floor(heroRect.y + hero.getBounds().height + hero.getVelocity().y);
+			startY = endY = (int) Math.floor(hero.getBounds().y + hero.getBounds().height + hero.getVelocity().y);
 		}
 		
 		populateCollidableBlocks(startX, startY, endX, endY);
+		
 		heroRect.y += hero.getVelocity().y;
 		
-		for(Block block : collidable) {
-			if(block != null) {
-//				if(heroRect.overlaps(block.getBounds())) {
-				
-				if(heroRect.y < (block.getBounds().y + Block.SIZE)) {			
-					if (hero.getVelocity().y < 0) {
-						grounded = true;
-//						hero.getVelocity().x = 0;
-					}
-					hero.getVelocity().y = 0;
-//					
-					// reset pos
-//					if(hero.getPosition().y < block.getPosition().y) {
-//						hero.getPosition().y -= COLLISION_DISTANCE;
-//					} else {
-//						hero.getPosition().y += COLLISION_DISTANCE;
-//					}
-					world.getCollisonRects().add(block.getBounds());
-					break;
+		for (Block block : collidable) {
+			if (block == null) continue;
+			if (heroRect.overlaps(block.getBounds())) {
+				if (hero.getVelocity().y < 0) {
+					grounded = true;
 				}
+				hero.getVelocity().y = 0;
+				world.getCollisionRects().add(block.getBounds());
+				break;
 			}
 		}
-		shapeRenderer = new ShapeRenderer();
-		camera = new OrthographicCamera(20f, 14f);
-		camera.position.set(20f / 2f, 14f / 2f, 0);
-		camera.update();
-		shapeRenderer.setProjectionMatrix(camera.combined);
-		shapeRenderer.begin(ShapeType.FilledRectangle);
-		shapeRenderer.setColor(new Color(1,1,1,1));
-		shapeRenderer.filledRect(heroRect.x, heroRect.y, heroRect.width, heroRect.height);
-		shapeRenderer.end();
 		
+		// TODO: optimise - don't loop through every enemy!
+		for(Enemy enemy : world.getLevel().getEnemies()) {
+			if(heroRect.overlaps(enemy.getBounds())) {
+				// reset position
+				if(hero.getVelocity().y < 0) {
+					enemy.die();
+				} else if(hero.getPosition().x < enemy.getPosition().x) {
+					hero.getPosition().x -= COLLISION_DISTANCE;
+					Gdx.app.log(RogueGame.LOG, "You died!");
+				} else {
+					hero.getPosition().x += COLLISION_DISTANCE;
+					Gdx.app.log(RogueGame.LOG, "You died!");
+				}
+				world.getCollisonRects().add(enemy.getBounds());
+
+				// hit an enemy, don't need to check any others
+				break;
+			}
+		}
+		
+		// reset the collision box's position on Y
 		heroRect.y = hero.getPosition().y;
+
+		// update position
 		hero.getPosition().add(hero.getVelocity());
 		hero.getBounds().x = hero.getPosition().x;
 		hero.getBounds().y = hero.getPosition().y;
 		
-		// transform velocity back into base units
-		hero.getVelocity().mul(1 / delta);	
+		// un-scale velocity (not in frame time)
+		hero.getVelocity().mul(1 / delta);
+		
 	}
 	
 	private void populateCollidableBlocks(int startX, int startY, int endX, int endY) {
@@ -300,62 +269,60 @@ public class HeroController {
 			}
 		}
 	}
+//	
+//	private void checkCollisionWithEntities(float delta) {
+//		// TODO: narrow to with x blocks
+//		hero.getVelocity().mul(delta);
+//		Rectangle heroRect = rectPool.obtain();
+//		heroRect.set(
+//				hero.getBounds().x, 
+//				hero.getBounds().y, 
+//				hero.getBounds().width, 
+//				hero.getBounds().height
+//				);
+//		for(Enemy enemy : world.getLevel().getEnemies()) {
+//			heroRect.x += hero.getVelocity().x;
+//			heroRect.y += hero.getVelocity().y;
+//			if(heroRect.overlaps(enemy.getBounds())) {
+//				hero.getVelocity().x = hero.getVelocity().y = 0;
+//				// reset position
+////				if(hero.getPosition().x < enemy.getPosition().x) {
+////					hero.getPosition().x -= COLLISION_DISTANCE;
+////				} else {
+////					hero.getPosition().x += COLLISION_DISTANCE;
+////				}
+////				if(hero.getPosition().y < enemy.getPosition().y) {
+////					hero.getPosition().y -= COLLISION_DISTANCE;
+////				} else {
+////					hero.getPosition().y += COLLISION_DISTANCE;
+////				}
+//				world.getCollisonRects().add(enemy.getBounds());
+//				
+//				Gdx.app.log(RogueGame.LOG, "You died!");
+//				// hit an enemy, don't need to check any others
+//				break;
+//			}
+//		}
+//		heroRect.y = hero.getPosition().y;
+//		hero.getPosition().add(hero.getVelocity());
+//		hero.getBounds().x = hero.getPosition().x;
+//		hero.getBounds().y = hero.getPosition().y;
+//		hero.getVelocity().mul(1 / delta);
+//	}
 	
-	private void checkCollisionWithEntities(float delta) {
-		// TODO: narrow to with x blocks
-		hero.getVelocity().mul(delta);
-		Rectangle heroRect = rectPool.obtain();
-		heroRect.set(
-				hero.getBounds().x, 
-				hero.getBounds().y, 
-				hero.getBounds().width, 
-				hero.getBounds().height
-				);
-		for(Enemy enemy : world.getLevel().getEnemies()) {
-			heroRect.x += hero.getVelocity().x;
-			heroRect.y += hero.getVelocity().y;
-			if(heroRect.overlaps(enemy.getBounds())) {
-				hero.getVelocity().x = hero.getVelocity().y = 0;
-				// reset position
-				if(hero.getPosition().x < enemy.getPosition().x) {
-					hero.getPosition().x -= COLLISION_DISTANCE;
-				} else {
-					hero.getPosition().x += COLLISION_DISTANCE;
-				}
-				if(hero.getPosition().y < enemy.getPosition().y) {
-					hero.getPosition().y -= COLLISION_DISTANCE;
-				} else {
-					hero.getPosition().y += COLLISION_DISTANCE;
-				}
-				world.getCollisonRects().add(enemy.getBounds());
-				
-				Gdx.app.log(RogueGame.LOG, "You died!");
-				// hit an enemy, don't need to check any others
-				break;
-			}
-		}
-		heroRect.y = hero.getPosition().y;
-		hero.getPosition().add(hero.getVelocity());
-		hero.getBounds().x = hero.getPosition().x;
-		hero.getBounds().y = hero.getPosition().y;
-		hero.getVelocity().mul(1 / delta);
-	}
-	
-	private void processInput() {
-		if(keys.get(Keys.JUMP)) {
-			if(!hero.getState().equals(State.JUMPING)) {
-				
-				hero.setState(State.JUMPING);
+	private boolean processInput() {
+		if (keys.get(Keys.JUMP)) {
+			if (!hero.getState().equals(State.JUMPING)) {
 				jumpPressed = true;
 				jumpPressedTime = System.currentTimeMillis();
-				hero.getVelocity().y = MAX_JUMP_SPEED;
+				hero.setState(State.JUMPING);
+				hero.getVelocity().y = MAX_JUMP_SPEED; 
 				grounded = false;
-				
 			} else {
-				if(jumpPressed && ((System.currentTimeMillis() - jumpPressedTime) >= LONG_JUMP_PRESS)) {
+				if (jumpPressed && ((System.currentTimeMillis() - jumpPressedTime) >= LONG_JUMP_PRESS)) {
 					jumpPressed = false;
 				} else {
-					if(jumpPressed) {
+					if (jumpPressed) {
 						hero.getVelocity().y = MAX_JUMP_SPEED;
 					}
 				}
@@ -368,52 +335,28 @@ public class HeroController {
 			}
 			hero.setDirection(Direction.LEFT);
 			hero.getVelocity().x = -Hero.SPEED;
+//			hero.getAcceleration().x = -ACCELERATION;
+			
 		} else if(keys.get(Keys.RIGHT)) {
 			if(!hero.getState().equals(State.JUMPING)) {
 				hero.setState(State.WALKING);
 			}
 			hero.setDirection(Direction.RIGHT);
 			hero.getVelocity().x = Hero.SPEED;
+//			hero.getAcceleration().x = ACCELERATION;
 		} else {
 			if(!hero.getState().equals(State.JUMPING)) {
 				hero.setState(State.IDLE);
 			}
+//			hero.getAcceleration().x = 0;
 			hero.getVelocity().x = 0;
 		}
-		
-		
-//		if(keys.get(Keys.DOWN)) {
-//			hero.setState(State.WALKING);
-//			hero.setDirection(Direction.DOWN);
-//			hero.getVelocity().y = -Hero.SPEED;
-//		}
-		
-//		if((keys.get(Keys.LEFT) && keys.get(Keys.RIGHT))) //||
-////			(keys.get(Keys.JUMP) && keys.get(Keys.DOWN)) ||
-////			(!keys.get(Keys.LEFT) && !keys.get(Keys.RIGHT) && !keys.get(Keys.JUMP) && !keys.get(Keys.DOWN))) {
-//				{
-//				hero.setState(State.IDLE);
-//				hero.getAcceleration().x = 0;
-//				hero.getAcceleration().y = 0;
-//				hero.getVelocity().x = 0;
-//				hero.getVelocity().y = 0;
-//		}
-		
-//		if(!keys.get(Keys.LEFT) && !keys.get(Keys.RIGHT)) {
-//			hero.getAcceleration().x = 0;
-//			hero.getVelocity().x = 0;
-//		}
-		
-//		if(!keys.get(Keys.JUMP) && !keys.get(Keys.DOWN)) {
-//			hero.getAcceleration().y = 0;
-//			hero.getVelocity().y = 0;
-//		}
-		
-//		if(keys.get(Keys.SHOOT)) {
+
 		if(shootPressed) {
 			hero.attack(world);	
 			shootPressed = false;
 		}
 		
+		return false;
 	}
 }

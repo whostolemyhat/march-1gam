@@ -21,6 +21,9 @@ public class World {
 	
 	Level level;
 	public Array<Rectangle> collisionRects = new Array<Rectangle>();
+	public Array<Rectangle> getCollisionRects() {
+		return collisionRects;
+	}
 	
 	private float ppuX;
 	private float ppuY;

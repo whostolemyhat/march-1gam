@@ -15,15 +15,15 @@ import com.whostolemyhat.rogue.RogueGame;
 public class Hero {
 	
 	public enum State {
-		IDLE, WALKING, DYING, JUMPING
+		IDLE, WALKING, DYING, JUMPING, FALLING
 	}
 	
 	public static enum Direction {
 		UP, DOWN, LEFT, RIGHT
 	}
 	
-	public static final float SPEED = 2.0f;
-	public final float SIZE = 0.5f;
+	public static final float SPEED = 7.0f;
+	public static final float SIZE = 0.5f;
 
 	Vector2 position = new Vector2();
 	Vector2 acceleration = new Vector2();
@@ -33,6 +33,7 @@ public class Hero {
 	// direction of bullets
 	public Direction direction = Direction.LEFT;
 	int health = 6; // 1 health = 1/2 heart
+	float stateTime = 0;
 	
 	Weapon weapon = new Weapon();
 	
@@ -79,11 +80,19 @@ public class Hero {
 	public void setDirection(Direction newDirection) {
 		this.direction = newDirection;
 	}
+	public float getStateTime() {
+		return stateTime;
+	}
+	
+	public void setStateTime(float stateTime) {
+		this.stateTime = stateTime;
+	}
 	
 	public void update(float delta) {
-		position.add(velocity.tmp().mul(delta));
-		bounds.x = position.x;
-		bounds.y = position.y;
+//		position.add(velocity.tmp().mul(delta));
+//		bounds.x = position.x;
+//		bounds.y = position.y;
+		this.stateTime += delta;
 	}
 	
 	private Pool<Rectangle> rectPool = new Pool<Rectangle>() {
