@@ -15,15 +15,15 @@ import com.whostolemyhat.rogue.RogueGame;
 public class Hero {
 	
 	public enum State {
-		IDLE, WALKING, DYING, JUMPING, FALLING
+		IDLE, WALKING, DYING, JUMPING, FALLING, STICKY
 	}
 	
 	public static enum Direction {
 		UP, DOWN, LEFT, RIGHT
 	}
 	
-	public static final float SPEED = 7.0f;
-	public static final float SIZE = 0.5f;
+	public static final float SPEED = 7f;
+	public static final float SIZE = 0.65f;
 
 	Vector2 position = new Vector2();
 	Vector2 acceleration = new Vector2();
@@ -65,9 +65,9 @@ public class Hero {
 		return velocity;
 	}
 	
-	public Vector2 getAcceleration() {
-		return acceleration;
-	}
+//	public Vector2 getAcceleration() {
+//		return acceleration;
+//	}
 	
 	public State getState() {
 		return this.state;

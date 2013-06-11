@@ -5,10 +5,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool;
@@ -33,12 +29,9 @@ public class HeroController {
 	
 	private boolean jumpPressed = false;
 	private long jumpPressedTime;
-	private static final long LONG_JUMP_PRESS = 160l;
-//	private static final float ACCELERATION = 50f;
-	private static final float GRAVITY = -20f;
-	private static final float MAX_JUMP_SPEED = 7f;
-//	private static final float DAMP = 0.10f;
-//	private static final float MAX_VEL = 10f;
+	private static final long LONG_JUMP_PRESS = 10;
+	private static final float GRAVITY = -40f;
+	private static final float MAX_JUMP_SPEED = 15f;
 	private boolean grounded = false;
 	
 	
@@ -81,6 +74,7 @@ public class HeroController {
 	
 	public void upReleased() {
 		keys.get(keys.put(Keys.JUMP, false));
+		jumpPressed = false;
 	}
 	
 	public void downPressed() {
@@ -107,26 +101,14 @@ public class HeroController {
 		processInput();
 		
 		if(grounded && hero.getState().equals(State.JUMPING)) {
-//		if(grounded) {
 			hero.setState(State.IDLE);
 		}
-		hero.getAcceleration().y = GRAVITY;
-
-		hero.getAcceleration().mul(delta);
-		hero.getVelocity().add(hero.getAcceleration().x, hero.getAcceleration().y);
+		
+		hero.getVelocity().add(0, GRAVITY * delta);
 		
 		// update pos then check whether out of bounds
 		checkCollisionWithBlocks(delta);
-//		checkCollisionWithEntities(delta);
-		
-//		hero.getVelocity().x *= DAMP;
-//		if(hero.getVelocity().x > MAX_VEL) {
-//			hero.getVelocity().x = MAX_VEL;
-//		}
-//		if(hero.getVelocity().x <= -MAX_VEL) {
-//			hero.getVelocity().x = -MAX_VEL;
-//		}
-		
+
 		hero.update(delta);
 
 //		
@@ -164,13 +146,18 @@ public class HeroController {
 		// Obtain the rectangle from the pool instead of instantiating it
 		Rectangle heroRect = rectPool.obtain();
 		// set the rectangle to bob's bounding box
-		heroRect.set(hero.getBounds().x, hero.getBounds().y, hero.getBounds().width, hero.getBounds().height);
+		heroRect.set(
+				hero.getBounds().x, 
+				hero.getBounds().y, 
+				hero.getBounds().width, 
+				hero.getBounds().height
+				);
 		
 		// we first check the movement on the horizontal X axis
 		int startX, endX;
 		int startY = (int) hero.getBounds().y;
 		int endY = (int) (hero.getBounds().y + hero.getBounds().height);
-		// if Bob is heading left then we check if he collides with the block on his left
+		// if hero is heading left then we check if he collides with the block on his left
 		// we check the block on his right otherwise
 		if (hero.getVelocity().x < 0) {
 			startX = endX = (int) Math.floor(hero.getBounds().x + hero.getVelocity().x);
@@ -191,6 +178,12 @@ public class HeroController {
 		for (Block block : collidable) {
 			if (block == null) continue;
 			if (heroRect.overlaps(block.getBounds())) {
+				if(!grounded) {
+					// TODO: do the sticky here!
+					Gdx.app.log(RogueGame.LOG, "Yup");
+					hero.getVelocity().y = 0;
+					hero.setState(State.STICKY);
+				}
 				hero.getVelocity().x = 0;
 				world.getCollisionRects().add(block.getBounds());
 				break;
@@ -233,9 +226,11 @@ public class HeroController {
 					enemy.die();
 				} else if(hero.getPosition().x < enemy.getPosition().x) {
 					hero.getPosition().x -= COLLISION_DISTANCE;
+					hero.getVelocity().x = 0;
 					Gdx.app.log(RogueGame.LOG, "You died!");
 				} else {
 					hero.getPosition().x += COLLISION_DISTANCE;
+					hero.getVelocity().x = 0;
 					Gdx.app.log(RogueGame.LOG, "You died!");
 				}
 				world.getCollisonRects().add(enemy.getBounds());
@@ -269,46 +264,6 @@ public class HeroController {
 			}
 		}
 	}
-//	
-//	private void checkCollisionWithEntities(float delta) {
-//		// TODO: narrow to with x blocks
-//		hero.getVelocity().mul(delta);
-//		Rectangle heroRect = rectPool.obtain();
-//		heroRect.set(
-//				hero.getBounds().x, 
-//				hero.getBounds().y, 
-//				hero.getBounds().width, 
-//				hero.getBounds().height
-//				);
-//		for(Enemy enemy : world.getLevel().getEnemies()) {
-//			heroRect.x += hero.getVelocity().x;
-//			heroRect.y += hero.getVelocity().y;
-//			if(heroRect.overlaps(enemy.getBounds())) {
-//				hero.getVelocity().x = hero.getVelocity().y = 0;
-//				// reset position
-////				if(hero.getPosition().x < enemy.getPosition().x) {
-////					hero.getPosition().x -= COLLISION_DISTANCE;
-////				} else {
-////					hero.getPosition().x += COLLISION_DISTANCE;
-////				}
-////				if(hero.getPosition().y < enemy.getPosition().y) {
-////					hero.getPosition().y -= COLLISION_DISTANCE;
-////				} else {
-////					hero.getPosition().y += COLLISION_DISTANCE;
-////				}
-//				world.getCollisonRects().add(enemy.getBounds());
-//				
-//				Gdx.app.log(RogueGame.LOG, "You died!");
-//				// hit an enemy, don't need to check any others
-//				break;
-//			}
-//		}
-//		heroRect.y = hero.getPosition().y;
-//		hero.getPosition().add(hero.getVelocity());
-//		hero.getBounds().x = hero.getPosition().x;
-//		hero.getBounds().y = hero.getPosition().y;
-//		hero.getVelocity().mul(1 / delta);
-//	}
 	
 	private boolean processInput() {
 		if (keys.get(Keys.JUMP)) {
@@ -321,10 +276,6 @@ public class HeroController {
 			} else {
 				if (jumpPressed && ((System.currentTimeMillis() - jumpPressedTime) >= LONG_JUMP_PRESS)) {
 					jumpPressed = false;
-				} else {
-					if (jumpPressed) {
-						hero.getVelocity().y = MAX_JUMP_SPEED;
-					}
 				}
 			}
 		}
