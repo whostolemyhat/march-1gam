@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
-public class Block {
+public class Block extends GameObject {
 	public static final float SIZE = 1f;
 	
 	Vector2 position = new Vector2();
@@ -17,6 +17,8 @@ public class Block {
 	public Color debugColour = new Color(0, 1, 0, 1);
 	
 	public Block(Vector2 pos) {
+		super(pos.x, pos.y, SIZE, SIZE);
+		
 		this.position = pos;
 		this.bounds.x = this.position.x;
 		this.bounds.y = this.position.y;

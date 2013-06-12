@@ -10,9 +10,9 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Pool;
 import com.whostolemyhat.rogue.RogueGame;
 import com.whostolemyhat.rogue.models.Block;
+import com.whostolemyhat.rogue.models.Coin;
 import com.whostolemyhat.rogue.models.Enemy;
 import com.whostolemyhat.rogue.models.Hero;
-import com.whostolemyhat.rogue.models.Projectile;
 import com.whostolemyhat.rogue.models.World;
 
 public class WorldRenderer {
@@ -59,6 +59,7 @@ public class WorldRenderer {
 		drawHero();
 		drawEnemies();
 //		drawProjectiles();
+		drawCoins();
 		batch.end();
 		
 		drawCollisionBlocks();
@@ -91,6 +92,13 @@ public class WorldRenderer {
 		}
 	}
 	
+	private void drawCoins() {
+		for(Coin coin : world.getCoins()) {
+			Gdx.app.log(RogueGame.LOG, coin.toString());
+			coin.draw(batch, ppuX, ppuY);
+		}
+	}
+	
 
 
 //	private void drawProjectiles() {
@@ -99,12 +107,12 @@ public class WorldRenderer {
 //		}
 //	}
 	
-	private Pool<Rectangle> rectPool = new Pool<Rectangle>() {
-		@Override
-		protected Rectangle newObject() {
-			return new Rectangle();
-		}
-	};
+//	private Pool<Rectangle> rectPool = new Pool<Rectangle>() {
+//		@Override
+//		protected Rectangle newObject() {
+//			return new Rectangle();
+//		}
+//	};
 	
 //	private void projectileCollision(float delta) {
 //		Rectangle collisionRect = rectPool.obtain();

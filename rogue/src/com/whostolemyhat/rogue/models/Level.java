@@ -11,6 +11,7 @@ public class Level {
 	private Door[][] doors;
 	public ArrayList<Enemy> enemies = new ArrayList<Enemy>();
 //	public ArrayList<Projectile> projectiles = new ArrayList<Projectile>();
+	public ArrayList<Coin> coins = new ArrayList<Coin>();
 	
 	public int getWidth() {
 		return width;
@@ -68,6 +69,8 @@ public class Level {
 		
 		enemies.add(new Enemy(new Vector2(10, 1)));
 		enemies.add(new Enemy(new Vector2(7, 8)));
+		
+		coins.add(new Coin(new Vector2(10, 10)));
 		
 		for(int col = 0; col < width; col++) {
 			for(int row = 0; row < height; row++) {

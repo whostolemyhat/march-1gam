@@ -19,6 +19,8 @@ public class World {
 //	Array<Enemy> enemies = new Array<Enemy>();
 	Array<Door> doors = new Array<Door>();
 	
+	public static final float GRAVITY = -40f;
+	
 	Level level;
 	public Array<Rectangle> collisionRects = new Array<Rectangle>();
 	public Array<Rectangle> getCollisionRects() {
@@ -76,6 +78,9 @@ public class World {
 		return getLevel().getEnemies();
 	}
 	
+	public ArrayList<Coin> getCoins() {
+		return getLevel().coins;
+	}
 	
 	public Level getLevel() {
 		return level;

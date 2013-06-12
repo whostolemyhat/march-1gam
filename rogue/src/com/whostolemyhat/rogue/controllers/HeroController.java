@@ -30,7 +30,7 @@ public class HeroController {
 	private boolean jumpPressed = false;
 	private long jumpPressedTime;
 	private static final long LONG_JUMP_PRESS = 10;
-	private static final float GRAVITY = -40f;
+//	private static final float GRAVITY = -40f;
 	private static final float MAX_JUMP_SPEED = 15f;
 	private boolean grounded = false;
 	
@@ -104,7 +104,7 @@ public class HeroController {
 			hero.setState(State.IDLE);
 		}
 		
-		hero.getVelocity().add(0, GRAVITY * delta);
+		hero.getVelocity().add(0, World.GRAVITY * delta);
 		
 		// update pos then check whether out of bounds
 		checkCollisionWithBlocks(delta);
