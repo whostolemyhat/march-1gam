@@ -47,6 +47,7 @@ public class Hero {
 		this.bounds.x = this.position.x;
 		this.bounds.y = this.position.y;
 		this.texture = new Texture(Gdx.files.internal("images/hero_01.png"));
+//		this.texture = new Texture(Gdx.files.internal("images/coin.png"));
 	}
 	
 	public Vector2 getPosition() {
@@ -153,15 +154,15 @@ public class Hero {
 		// deal damage
 	}
 	
-	public void draw(SpriteBatch batch, float ppuX, float ppuY) {
-		batch.draw(
-				this.texture, 
-				this.getPosition().x * ppuX, 
-				this.getPosition().y * ppuY, 
-				this.SIZE * ppuX, 
-				this.SIZE * ppuY
-				);
-	}
+//	public void draw(SpriteBatch batch, float ppuX, float ppuY) {
+//		batch.draw(
+//				this.texture, 
+//				this.getPosition().x * ppuX, 
+//				this.getPosition().y * ppuY, 
+//				this.SIZE * ppuX, 
+//				this.SIZE * ppuY
+//				);
+//	}
 	
 	public int getHealth() {
 		return health;

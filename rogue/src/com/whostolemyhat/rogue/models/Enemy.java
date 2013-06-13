@@ -18,7 +18,7 @@ public class Enemy extends Hero {
 	
 	public Enemy(Vector2 position) {
 		super(position);
-		this.texture = new Texture(Gdx.files.internal("images/hero_01.png"));
+		this.texture = new Texture(Gdx.files.internal("images/enemy.png"));
 		this.active = true;
 	}
 	

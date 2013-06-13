@@ -26,15 +26,15 @@ public class GameObject {
 		return bounds;
 	}
 	
-	public void draw(SpriteBatch batch, float ppuX, float ppuY) {
-		Gdx.app.log(RogueGame.LOG, "Draw called");
-		
-		batch.draw(
-				this.texture, 
-				this.getPosition().x * ppuX, 
-				this.getPosition().y * ppuY, 
-				this.SIZE * ppuX, 
-				this.SIZE * ppuY
-				);
-	}
+//	public void draw(SpriteBatch batch, float ppuX, float ppuY) {
+//		Gdx.app.log(RogueGame.LOG, "GameObject draw");
+//		
+//		batch.draw(
+//				texture, 
+//				this.getPosition().x * ppuX, 
+//				this.getPosition().y * ppuY, 
+//				this.SIZE * ppuX, 
+//				this.SIZE * ppuY
+//				);
+//	}
 }

@@ -178,12 +178,11 @@ public class HeroController {
 		for (Block block : collidable) {
 			if (block == null) continue;
 			if (heroRect.overlaps(block.getBounds())) {
-				if(!grounded) {
-					// TODO: do the sticky here!
-					Gdx.app.log(RogueGame.LOG, "Yup");
-					hero.getVelocity().y = 0;
-					hero.setState(State.STICKY);
-				}
+//				if(!grounded) {
+//					// Sticky / wall jump
+//					hero.getVelocity().y = 0;
+//					hero.setState(State.STICKY);
+//				}
 				hero.getVelocity().x = 0;
 				world.getCollisionRects().add(block.getBounds());
 				break;

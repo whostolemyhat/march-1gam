@@ -62,10 +62,11 @@ public class WorldRenderer {
 		drawCoins();
 		batch.end();
 		
-		drawCollisionBlocks();
+		
 		
 		if(debug) {
-			drawDebug();
+			drawCollisionBlocks();
+//			drawDebug();
 		}
 	}
 	
@@ -83,19 +84,40 @@ public class WorldRenderer {
 	
 	private void drawHero() {
 		Hero hero = world.getHero();
-		hero.draw(batch, ppuX, ppuY);
+//		hero.draw(batch, ppuX, ppuY);
+		batch.draw(
+				hero.texture,
+				hero.getPosition().x * ppuX,
+				hero.getPosition().y * ppuY,
+				Hero.SIZE * ppuX,
+				Hero.SIZE * ppuY
+				);
 	}
 	
 	private void drawEnemies() {
 		for(Enemy enemy : world.getEnemies()) {
-			enemy.draw(batch, ppuX, ppuY);
+//			enemy.draw(batch, ppuX, ppuY);
+			batch.draw(
+					enemy.texture,
+					enemy.getPosition().x * ppuX,
+					enemy.getPosition().y * ppuY,
+					Enemy.SIZE * ppuX,
+					Enemy.SIZE * ppuY
+					);
 		}
 	}
 	
 	private void drawCoins() {
 		for(Coin coin : world.getCoins()) {
-			Gdx.app.log(RogueGame.LOG, coin.toString());
-			coin.draw(batch, ppuX, ppuY);
+			batch.draw(
+					coin.texture,
+					coin.getPosition().x * ppuX,
+					coin.getPosition().y * ppuY,
+					Coin.SIZE * ppuX,
+					Coin.SIZE * ppuY
+					);
+			
+//			coin.draw(batch, ppuX, ppuY);
 		}
 	}
 	
@@ -142,26 +164,26 @@ public class WorldRenderer {
 //				&& (entity.getBounds().y > 0) && (entity.getBounds().y < height + entity.getBounds().height);
 //	}
 	
-	private void drawDebug() {
-		debugRenderer.setProjectionMatrix(cam.combined);
-		debugRenderer.begin(ShapeType.Rectangle);
+//	private void drawDebug() {
+//		debugRenderer.setProjectionMatrix(cam.combined);
+//		debugRenderer.begin(ShapeType.Rectangle);
 		
-		for(Block block : world.getDrawableBlocks(width, height)) {
-			Rectangle rect = block.getBounds();
-			float x1 = block.getPosition().x + rect.x;
-			float y1 = block.getPosition().y + rect.y;
-			
-			debugRenderer.setColor(block.debugColour);
-			debugRenderer.rect(x1, y1, rect.width, rect.height);
-		}
-		
-		Hero hero = world.getHero();
-		Rectangle rectHero = hero.getBounds();
-		
-		float heroX = hero.getPosition().x + rectHero.x;
-		float heroY = hero.getPosition().y + rectHero.y;
-		debugRenderer.setColor(hero.debugColour);
-		debugRenderer.rect(heroX, heroY, rectHero.width, rectHero.height);
+//		for(Block block : world.getDrawableBlocks(width, height)) {
+//			Rectangle rect = block.getBounds();
+//			float x1 = block.getPosition().x + rect.x;
+//			float y1 = block.getPosition().y + rect.y;
+//			
+//			debugRenderer.setColor(block.debugColour);
+//			debugRenderer.rect(x1, y1, rect.width, rect.height);
+//		}
+//		
+//		Hero hero = world.getHero();
+//		Rectangle rectHero = hero.getBounds();
+//		
+//		float heroX = hero.getPosition().x + rectHero.x;
+//		float heroY = hero.getPosition().y + rectHero.y;
+//		debugRenderer.setColor(hero.debugColour);
+//		debugRenderer.rect(heroX, heroY, rectHero.width, rectHero.height);
 		
 //		for(Enemy enemy : world.getEnemies()) {
 //			Rectangle rectEnemy = enemy.getBounds();
@@ -172,7 +194,7 @@ public class WorldRenderer {
 //			debugRenderer.rect(x2, y2, rectEnemy.width, rectEnemy.height);
 //		}
 		// end rect, call again with filledRect
-		debugRenderer.end();
+//		debugRenderer.end();
 		
 //		for(Door door : world.getDoors()) {
 //			Rectangle doorRect = door.getBounds();
@@ -186,5 +208,5 @@ public class WorldRenderer {
 //		}
 		
 		
-	}
+//	}
 }
