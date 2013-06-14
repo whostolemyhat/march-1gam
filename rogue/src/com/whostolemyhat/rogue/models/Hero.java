@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Rectangle;
@@ -15,7 +14,7 @@ import com.whostolemyhat.rogue.RogueGame;
 public class Hero {
 	
 	public enum State {
-		IDLE, WALKING, DYING, JUMPING, FALLING, STICKY
+		IDLE, WALKING, JUMPING, FALLING, STICKY, HIT
 	}
 	
 	public static enum Direction {
@@ -103,11 +102,8 @@ public class Hero {
 		}
 	};
 	
-	// should be in controller!
+	// TODO: should be in controller!
 	public void attack(World world) {
-//		world.getLevel().projectiles.add(new Projectile(
-//				new Vector2(this.getPosition().x, this.getPosition().y), 
-//				this.direction));
 		// Draw box in direction facing
 		Rectangle weaponRect = rectPool.obtain();
 		weaponRect.set(
@@ -119,16 +115,16 @@ public class Hero {
 		// change x/y based on direction
 		switch(this.direction) {
 		case UP:
-			weaponRect.y += this.SIZE;
+			weaponRect.y += SIZE;
 			break;
 		case DOWN:
-			weaponRect.y -= this.SIZE;
+			weaponRect.y -= SIZE;
 			break;
 		case LEFT:
-			weaponRect.x -= this.SIZE;
+			weaponRect.x -= SIZE;
 			break;
 		case RIGHT:
-			weaponRect.x += this.SIZE;
+			weaponRect.x += SIZE;
 			break;
 		default:
 			break;
@@ -153,16 +149,6 @@ public class Hero {
 		}
 		// deal damage
 	}
-	
-//	public void draw(SpriteBatch batch, float ppuX, float ppuY) {
-//		batch.draw(
-//				this.texture, 
-//				this.getPosition().x * ppuX, 
-//				this.getPosition().y * ppuY, 
-//				this.SIZE * ppuX, 
-//				this.SIZE * ppuY
-//				);
-//	}
 	
 	public int getHealth() {
 		return health;

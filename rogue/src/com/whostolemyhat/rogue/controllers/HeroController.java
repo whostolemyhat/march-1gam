@@ -108,22 +108,24 @@ public class HeroController {
 		
 		// update pos then check whether out of bounds
 		checkCollisionWithBlocks(delta);
+		checkEnemyCollision();
+		checkItemCollision();
 
 		hero.update(delta);
 
 //		
 		// TODO: lol this shouldn't be here
-		ArrayList<Enemy> newEnemies = new ArrayList<Enemy>();
-		for(Enemy e : world.getLevel().getEnemies()) {
-			if(e.active) {
-				newEnemies.add(e);
-			}
-		}
-		world.getLevel().enemies = newEnemies;
-		// TODO: lol this shouldn't be here
-		for(Enemy e : world.getLevel().getEnemies()) {
-			e.update(delta);
-		}
+//		ArrayList<Enemy> newEnemies = new ArrayList<Enemy>();
+//		for(Enemy e : world.getLevel().getEnemies()) {
+//			if(e.active) {
+//				newEnemies.add(e);
+//			}
+//		}
+//		world.getLevel().enemies = newEnemies;
+//		// TODO: lol this shouldn't be here
+//		for(Enemy e : world.getLevel().getEnemies()) {
+//			e.update(delta);
+//		}
 		// TODO: shouldn't be in hero controller
 //		for(Projectile p : world.getLevel().getProjectiles()) {
 //			p.update(delta);
@@ -138,6 +140,43 @@ public class HeroController {
 			return new Rectangle();
 		}
 	};
+	
+	private void checkEnemyCollision() {
+		Rectangle heroRect = rectPool.obtain();
+		// set the rectangle to bob's bounding box
+		heroRect.set(
+				hero.getBounds().x, 
+				hero.getBounds().y, 
+				hero.getBounds().width, 
+				hero.getBounds().height
+				);
+		
+		// TODO: optimise - don't loop through every enemy!
+		for(Enemy enemy : world.getLevel().getEnemies()) {
+			if(heroRect.overlaps(enemy.getBounds())) {
+				// reset position
+				if(hero.getVelocity().y < 0) {
+					enemy.die();
+				} else if(hero.getPosition().x < enemy.getPosition().x) {
+					hero.getPosition().x -= COLLISION_DISTANCE;
+					hero.getVelocity().x = 0;
+					Gdx.app.log(RogueGame.LOG, "You died!");
+				} else {
+					hero.getPosition().x += COLLISION_DISTANCE;
+					hero.getVelocity().x = 0;
+					Gdx.app.log(RogueGame.LOG, "You died!");
+				}
+				world.getCollisonRects().add(enemy.getBounds());
+
+				// hit an enemy, don't need to check any others
+				break;
+			}
+		}
+	}
+	
+	private void checkItemCollision() {
+		
+	}
 	
 	private void checkCollisionWithBlocks(float delta) {
 		// scale velocity to frame units 
@@ -217,27 +256,7 @@ public class HeroController {
 			}
 		}
 		
-		// TODO: optimise - don't loop through every enemy!
-		for(Enemy enemy : world.getLevel().getEnemies()) {
-			if(heroRect.overlaps(enemy.getBounds())) {
-				// reset position
-				if(hero.getVelocity().y < 0) {
-					enemy.die();
-				} else if(hero.getPosition().x < enemy.getPosition().x) {
-					hero.getPosition().x -= COLLISION_DISTANCE;
-					hero.getVelocity().x = 0;
-					Gdx.app.log(RogueGame.LOG, "You died!");
-				} else {
-					hero.getPosition().x += COLLISION_DISTANCE;
-					hero.getVelocity().x = 0;
-					Gdx.app.log(RogueGame.LOG, "You died!");
-				}
-				world.getCollisonRects().add(enemy.getBounds());
-
-				// hit an enemy, don't need to check any others
-				break;
-			}
-		}
+		// here
 		
 		// reset the collision box's position on Y
 		heroRect.y = hero.getPosition().y;

@@ -1,14 +1,13 @@
 package com.whostolemyhat.rogue.controllers;
 
-import com.badlogic.gdx.Gdx;
+import java.util.ArrayList;
+
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.utils.Pool;
-import com.whostolemyhat.rogue.RogueGame;
 import com.whostolemyhat.rogue.models.Block;
 import com.whostolemyhat.rogue.models.Coin;
 import com.whostolemyhat.rogue.models.Enemy;
@@ -55,18 +54,14 @@ public class WorldRenderer {
 	public void render() {
 		batch.begin();
 		drawBlocks();
-//		drawDoors();
 		drawHero();
 		drawEnemies();
-//		drawProjectiles();
 		drawCoins();
 		batch.end();
 		
-		
-		
+
 		if(debug) {
 			drawCollisionBlocks();
-//			drawDebug();
 		}
 	}
 	
@@ -76,15 +71,8 @@ public class WorldRenderer {
 		}
 	}
 	
-//	private void drawDoors() {
-//		for(Door door :  world.getDoors()) {
-//			door.draw(batch, ppuX, ppuY);
-//		}
-//	}
-	
 	private void drawHero() {
 		Hero hero = world.getHero();
-//		hero.draw(batch, ppuX, ppuY);
 		batch.draw(
 				hero.texture,
 				hero.getPosition().x * ppuX,
@@ -95,8 +83,14 @@ public class WorldRenderer {
 	}
 	
 	private void drawEnemies() {
-		for(Enemy enemy : world.getEnemies()) {
-//			enemy.draw(batch, ppuX, ppuY);
+		ArrayList<Enemy> newEnemies = new ArrayList<Enemy>();
+		for(Enemy e : world.getLevel().getEnemies()) {
+			if(e.active) {
+				newEnemies.add(e);
+			}
+		}
+		world.getLevel().enemies = newEnemies;
+		for(Enemy enemy : world.getLevel().getEnemies()) {
 			batch.draw(
 					enemy.texture,
 					enemy.getPosition().x * ppuX,
@@ -105,6 +99,7 @@ public class WorldRenderer {
 					Enemy.SIZE * ppuY
 					);
 		}
+
 	}
 	
 	private void drawCoins() {
@@ -116,39 +111,9 @@ public class WorldRenderer {
 					Coin.SIZE * ppuX,
 					Coin.SIZE * ppuY
 					);
-			
-//			coin.draw(batch, ppuX, ppuY);
 		}
 	}
-	
 
-
-//	private void drawProjectiles() {
-//		for(Projectile projectile : world.getProjectiles()) {
-//			projectile.draw(batch, ppuX, ppuY);
-//		}
-//	}
-	
-//	private Pool<Rectangle> rectPool = new Pool<Rectangle>() {
-//		@Override
-//		protected Rectangle newObject() {
-//			return new Rectangle();
-//		}
-//	};
-	
-//	private void projectileCollision(float delta) {
-//		Rectangle collisionRect = rectPool.obtain();
-//		for(Projectile projectile : world.getProjectiles()) {
-//			projectile.getVelocity().mul(delta);
-//			collisionRect.set(
-//					projectile.getBounds().x, 
-//					projectile.getBounds().y, 
-//					projectile.getBounds().width, 
-//					projectile.getBounds().height
-//					);
-//		}
-//	}
-	
 	private void drawCollisionBlocks() {
 		debugRenderer.setProjectionMatrix(cam.combined);
 		debugRenderer.begin(ShapeType.FilledRectangle);
@@ -158,55 +123,5 @@ public class WorldRenderer {
 		}
 		debugRenderer.end();
 	}
-	
-//	private boolean inBounds(Projectile entity) {
-//		return (entity.getBounds().x > 0) && (entity.getBounds().x < width + entity.getBounds().width) 
-//				&& (entity.getBounds().y > 0) && (entity.getBounds().y < height + entity.getBounds().height);
-//	}
-	
-//	private void drawDebug() {
-//		debugRenderer.setProjectionMatrix(cam.combined);
-//		debugRenderer.begin(ShapeType.Rectangle);
-		
-//		for(Block block : world.getDrawableBlocks(width, height)) {
-//			Rectangle rect = block.getBounds();
-//			float x1 = block.getPosition().x + rect.x;
-//			float y1 = block.getPosition().y + rect.y;
-//			
-//			debugRenderer.setColor(block.debugColour);
-//			debugRenderer.rect(x1, y1, rect.width, rect.height);
-//		}
-//		
-//		Hero hero = world.getHero();
-//		Rectangle rectHero = hero.getBounds();
-//		
-//		float heroX = hero.getPosition().x + rectHero.x;
-//		float heroY = hero.getPosition().y + rectHero.y;
-//		debugRenderer.setColor(hero.debugColour);
-//		debugRenderer.rect(heroX, heroY, rectHero.width, rectHero.height);
-		
-//		for(Enemy enemy : world.getEnemies()) {
-//			Rectangle rectEnemy = enemy.getBounds();
-//			float x2 = enemy.getPosition().x + rectEnemy.x;
-//			float y2 = enemy.getPosition().y + rectEnemy.y;
-//			
-//			debugRenderer.setColor(enemy.debugColour);
-//			debugRenderer.rect(x2, y2, rectEnemy.width, rectEnemy.height);
-//		}
-		// end rect, call again with filledRect
-//		debugRenderer.end();
-		
-//		for(Door door : world.getDoors()) {
-//			Rectangle doorRect = door.getBounds();
-//			float x = door.getPosition().x + doorRect.x;
-//			float y = door.getPosition().y + doorRect.y;
-//			
-//			debugRenderer.begin(ShapeType.FilledRectangle);
-//			debugRenderer.setColor(door.debugColour);
-//			debugRenderer.filledRect(x, y, doorRect.width, doorRect.height);
-//			debugRenderer.end();
-//		}
-		
-		
-//	}
+
 }

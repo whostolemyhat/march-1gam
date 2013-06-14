@@ -10,25 +10,61 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Pool;
 import com.whostolemyhat.rogue.RogueGame;
 
 public class World {
 	
-	Array<Block> blocks = new Array<Block>();
+	public interface WorldListener {
+		public void enemy();
+		public void hit();
+		public void coin();
+	}
+	
+//	Array<Block> blocks = new Array<Block>();
+
 	Hero hero;
-//	Array<Enemy> enemies = new Array<Enemy>();
-	Array<Door> doors = new Array<Door>();
+	Level level;
 	
 	public static final float GRAVITY = -40f;
-	
-	Level level;
 	public Array<Rectangle> collisionRects = new Array<Rectangle>();
-	public Array<Rectangle> getCollisionRects() {
-		return collisionRects;
-	}
 	
 	private float ppuX;
 	private float ppuY;
+	
+	public World() {
+		createDemoWorld();
+	}
+	
+	public void update(float delta) {
+//		hero.update(delta);
+		updateHero(delta);
+		updateEnemies(delta);
+		updateCoins(delta);
+//		if(!hero.getState().equals(Hero.State.HIT)) {
+//			checkCollisions();
+//		}
+//		checkGameOver();
+	}
+	
+	private void updateHero(float delta) {
+		hero.update(delta);
+	}
+	
+	// TODO: optimise to on-screen enemies
+	private void updateEnemies(float delta) {
+		for(Enemy enemy : getEnemies()) {
+			enemy.update(delta);
+		}
+	}
+	
+	// TODO: optimise for on-screen 
+	private void updateCoins(float delta) {
+		for(Coin coin : getCoins()) {
+			coin.update(delta);
+		}
+	}
+	
 	
 	public float getPpuX() {
 		return ppuX;
@@ -44,10 +80,6 @@ public class World {
 	
 	public void setPpuY(float newPpu) {
 		this.ppuY = newPpu;
-	}
-	
-	public World() {
-		createDemoWorld();
 	}
 	
 	public ArrayList<Block> getBlocks() {
@@ -66,8 +98,8 @@ public class World {
 		return blocks;
 	}
 	
-	public Array<Door> getDoors() {
-		return doors;
+	public Array<Rectangle> getCollisionRects() {
+		return collisionRects;
 	}
 	
 	public Hero getHero() {
