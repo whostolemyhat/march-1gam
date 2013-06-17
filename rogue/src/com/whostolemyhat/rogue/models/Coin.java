@@ -11,6 +11,7 @@ public class Coin extends GameObject {
 	public static final float SIZE = 0.5f;
 	public static final int VALUE = 10;
 	float stateTime;
+	public boolean active = true;
 
 	public Coin(Vector2 position) {
 		super(position.x, position.y, SIZE, SIZE);
@@ -21,16 +22,5 @@ public class Coin extends GameObject {
 	public void update(float delta) {
 		stateTime += delta;
 	}
-	
-//	public void draw(SpriteBatch batch, float ppuX, float ppuY) {
-//		Gdx.app.log(RogueGame.LOG, "Coin draw");
-//		
-//		batch.draw(
-//				this.texture, 
-//				this.getPosition().x * ppuX, 
-//				this.getPosition().y * ppuY, 
-//				SIZE * ppuX, 
-//				SIZE * ppuY
-//				);
-//	}
+
 }

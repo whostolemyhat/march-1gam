@@ -58,7 +58,6 @@ public class WorldRenderer {
 		drawEnemies();
 		drawCoins();
 		batch.end();
-		
 
 		if(debug) {
 			drawCollisionBlocks();
@@ -83,13 +82,6 @@ public class WorldRenderer {
 	}
 	
 	private void drawEnemies() {
-		ArrayList<Enemy> newEnemies = new ArrayList<Enemy>();
-		for(Enemy e : world.getLevel().getEnemies()) {
-			if(e.active) {
-				newEnemies.add(e);
-			}
-		}
-		world.getLevel().enemies = newEnemies;
 		for(Enemy enemy : world.getLevel().getEnemies()) {
 			batch.draw(
 					enemy.texture,

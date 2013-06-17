@@ -62,7 +62,7 @@ public class Level {
 //	}
 	
 	private void loadDemoLevel() {
-		width = 20;
+		width = 30;
 		height = 14;
 		blocks = new Block[width][height];
 		doors = new Door[width][height];
@@ -86,11 +86,11 @@ public class Level {
 		
 		for(int col = 0; col < width; col++) {
 			blocks[col][0] = new Block(new Vector2(col, 0));
-			blocks[col][13] = new Block(new Vector2(col, 13));
+//			blocks[col][13] = new Block(new Vector2(col, 13));
 		}
 		for(int row = 0; row < height; row++) {
 			blocks[0][row] = new Block(new Vector2(0, row));
-			blocks[19][row] = new Block(new Vector2(19, row));
+			blocks[29][row] = new Block(new Vector2(29, row));
 		}
 
 		blocks[14][2] = new Block(new Vector2(14, 2));

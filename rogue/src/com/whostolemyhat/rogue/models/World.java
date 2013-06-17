@@ -20,11 +20,11 @@ public class World {
 		public void hit();
 		public void coin();
 	}
-	
-//	Array<Block> blocks = new Array<Block>();
 
 	Hero hero;
 	Level level;
+	public final WorldListener listener;
+	public int score;
 	
 	public static final float GRAVITY = -40f;
 	public Array<Rectangle> collisionRects = new Array<Rectangle>();
@@ -32,8 +32,10 @@ public class World {
 	private float ppuX;
 	private float ppuY;
 	
-	public World() {
+	public World(WorldListener listener) {
 		createDemoWorld();
+		this.listener = listener;
+		score = 0;
 	}
 	
 	public void update(float delta) {

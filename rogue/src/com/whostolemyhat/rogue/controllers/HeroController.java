@@ -1,6 +1,5 @@
 package com.whostolemyhat.rogue.controllers;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,6 +9,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool;
 import com.whostolemyhat.rogue.RogueGame;
 import com.whostolemyhat.rogue.models.Block;
+import com.whostolemyhat.rogue.models.Coin;
 import com.whostolemyhat.rogue.models.Enemy;
 import com.whostolemyhat.rogue.models.Hero;
 import com.whostolemyhat.rogue.models.Hero.Direction;
@@ -24,13 +24,13 @@ public class HeroController {
 	private World world;
 	private Hero hero;
 	private Array<Block> collidable = new Array<Block>();
+	private Array<Enemy> collidableEnemies = new Array<Enemy>();
 	private float COLLISION_DISTANCE = 1f;
 	private boolean shootPressed = false;
 	
 	private boolean jumpPressed = false;
 	private long jumpPressedTime;
 	private static final long LONG_JUMP_PRESS = 10;
-//	private static final float GRAVITY = -40f;
 	private static final float MAX_JUMP_SPEED = 15f;
 	private boolean grounded = false;
 	
@@ -112,24 +112,6 @@ public class HeroController {
 		checkItemCollision();
 
 		hero.update(delta);
-
-//		
-		// TODO: lol this shouldn't be here
-//		ArrayList<Enemy> newEnemies = new ArrayList<Enemy>();
-//		for(Enemy e : world.getLevel().getEnemies()) {
-//			if(e.active) {
-//				newEnemies.add(e);
-//			}
-//		}
-//		world.getLevel().enemies = newEnemies;
-//		// TODO: lol this shouldn't be here
-//		for(Enemy e : world.getLevel().getEnemies()) {
-//			e.update(delta);
-//		}
-		// TODO: shouldn't be in hero controller
-//		for(Projectile p : world.getLevel().getProjectiles()) {
-//			p.update(delta);
-//		}
 		
 	} 
 	
@@ -151,12 +133,21 @@ public class HeroController {
 				hero.getBounds().height
 				);
 		
+		// really naive - if within 1 block any direction
+//		int startX, startY, endX, endY;
+//		startX = (int) hero.getBounds().x - 1;
+//		endX = (int) hero.getBounds().x + 1;
+//		startY = (int) hero.getBounds().y -1;
+//		endY = (int) hero.getBounds().y + 1;
+//		populateCollidableEnemies(startX, startY, endX, endY);
+		
 		// TODO: optimise - don't loop through every enemy!
 		for(Enemy enemy : world.getLevel().getEnemies()) {
 			if(heroRect.overlaps(enemy.getBounds())) {
 				// reset position
 				if(hero.getVelocity().y < 0) {
 					enemy.die();
+					world.listener.enemy();
 				} else if(hero.getPosition().x < enemy.getPosition().x) {
 					hero.getPosition().x -= COLLISION_DISTANCE;
 					hero.getVelocity().x = 0;
@@ -173,9 +164,39 @@ public class HeroController {
 			}
 		}
 	}
-	
+//
+//	private void populateCollidableEnemies(int startX, int startY,
+//			int endX, int endY) {
+//		
+//		collidableEnemies.clear();
+//		for(int x = startX; x <= endX; x++) {
+//			for(int y = startY; y <= endY; y++) {
+//				if(x >= 0 && x < world.getLevel().getWidth() && y >=0 && y <= world.getLevel().getHeight()) {
+//					collidableEnemies.add(world.getLevel().get(x, y));
+//				}
+//			}
+//		}
+//	}
+
 	private void checkItemCollision() {
+		Rectangle heroRect = rectPool.obtain();
+		heroRect.set(
+				hero.getBounds().x, 
+				hero.getBounds().y, 
+				hero.getBounds().width, 
+				hero.getBounds().height
+				);
 		
+		// TODO: optimise!
+		for(Coin coin : world.getCoins()) {
+			if(heroRect.overlaps(coin.getBounds())) {
+				world.score += Coin.VALUE;
+				coin.active = false;
+				world.listener.coin();
+				// better not get two at once!
+				break;
+			}
+		}
 	}
 	
 	private void checkCollisionWithBlocks(float delta) {
@@ -241,6 +262,7 @@ public class HeroController {
 		}
 		
 		populateCollidableBlocks(startX, startY, endX, endY);
+//		Gdx.app.log(RogueGame.LOG, String.format("%d %d %d %d", startX, startY, endX, endY));
 		
 		heroRect.y += hero.getVelocity().y;
 		

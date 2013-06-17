@@ -24,7 +24,6 @@ public class Enemy extends Hero {
 	
 	public void die() {
 		Gdx.app.log(RogueGame.LOG, "Enemy died!");
-//		world.getLevel().removeEnemy(index);
 		this.active = false;
 	}
 

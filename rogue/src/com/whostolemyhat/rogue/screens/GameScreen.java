@@ -1,5 +1,7 @@
 package com.whostolemyhat.rogue.screens;
 
+import java.util.ArrayList;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
@@ -7,13 +9,17 @@ import com.badlogic.gdx.graphics.GL10;
 import com.whostolemyhat.rogue.RogueGame;
 import com.whostolemyhat.rogue.controllers.HeroController;
 import com.whostolemyhat.rogue.controllers.WorldRenderer;
+import com.whostolemyhat.rogue.models.Coin;
+import com.whostolemyhat.rogue.models.Enemy;
 import com.whostolemyhat.rogue.models.World;
+import com.whostolemyhat.rogue.models.World.WorldListener;
 
 public class GameScreen extends AbstractScreen implements InputProcessor {
 	
 	private World world;
 	private WorldRenderer renderer;
 	private HeroController controller;
+	WorldListener listener;
 	
 	private int width, height;
 	
@@ -32,7 +38,41 @@ public class GameScreen extends AbstractScreen implements InputProcessor {
 
 	@Override
 	public void show() {
-		world = new World();
+		listener = new WorldListener() {
+			
+			@Override
+			public void hit() {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void enemy() {
+				Gdx.app.log(RogueGame.LOG, "Enemy died!");
+				
+				ArrayList<Enemy> newEnemies = new ArrayList<Enemy>();
+				for(Enemy e : world.getLevel().getEnemies()) {
+					if(e.active) {
+						newEnemies.add(e);
+					}
+				}
+				world.getLevel().enemies = newEnemies;
+			}
+			
+			@Override
+			public void coin() {
+				Gdx.app.log(RogueGame.LOG, String.format("Score: %d", world.score));
+				// TODO: should this be in GameScreen?
+				ArrayList<Coin> newCoins = new ArrayList<Coin>();
+				for(Coin coin : world.getCoins()) {
+					if(coin.active) {
+						newCoins.add(coin);
+					}
+				}
+				world.getLevel().coins = newCoins;
+			}
+		};
+		world = new World(listener);
 		renderer = new WorldRenderer(world, false);
 		controller = new HeroController(world);
 		Gdx.input.setInputProcessor(this);
