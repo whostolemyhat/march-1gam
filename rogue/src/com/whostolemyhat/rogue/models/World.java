@@ -28,10 +28,10 @@ public class World {
 	
 	public static final float GRAVITY = -40f;
 	public Array<Rectangle> collisionRects = new Array<Rectangle>();
-	
-	private float ppuX;
-	private float ppuY;
-	
+//	
+//	private float ppuX;
+//	private float ppuY;
+//	
 	public World(WorldListener listener) {
 		createDemoWorld();
 		this.listener = listener;
@@ -68,22 +68,22 @@ public class World {
 	}
 	
 	
-	public float getPpuX() {
-		return ppuX;
-	}
-	
-	public float getPpuY() {
-		return ppuY;
-	}
-	
-	public void setPpuX(float newPpu) {
-		this.ppuX = newPpu;
-	}
-	
-	public void setPpuY(float newPpu) {
-		this.ppuY = newPpu;
-	}
-	
+//	public float getPpuX() {
+//		return ppuX;
+//	}
+//	
+//	public float getPpuY() {
+//		return ppuY;
+//	}
+//	
+//	public void setPpuX(float newPpu) {
+//		this.ppuX = newPpu;
+//	}
+//	
+//	public void setPpuY(float newPpu) {
+//		this.ppuY = newPpu;
+//	}
+//	
 	public ArrayList<Block> getBlocks() {
 		Block block;
 		ArrayList<Block> blocks = new ArrayList<Block>();

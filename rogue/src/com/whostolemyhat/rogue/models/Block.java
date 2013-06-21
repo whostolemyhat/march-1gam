@@ -27,6 +27,16 @@ public class Block extends GameObject {
 		this.texture = new Texture(Gdx.files.internal("images/block.png"));
 	}
 	
+	public Block(Vector2 pos, Texture texture) {
+		super(pos.x, pos.y, SIZE, SIZE);
+		this.position = pos;
+		this.bounds.x = this.position.x;
+		this.bounds.y = this.position.y;
+		this.bounds.width = SIZE;
+		this.bounds.height = SIZE;
+		this.texture = texture;
+	}
+	
 	public Vector2 getPosition() {
 		return position;
 	}
@@ -45,4 +55,14 @@ public class Block extends GameObject {
 				);
 	}
 	
+	
+	public void draw(SpriteBatch batch) {
+		batch.draw(
+				this.texture,
+				this.getPosition().x, 
+				this.getPosition().y,
+				Block.SIZE, 
+				Block.SIZE
+				);
+	}
 }
