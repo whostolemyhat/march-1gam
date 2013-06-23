@@ -29,7 +29,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor {
 	
 	@Override
 	public void render(float delta) {
-		Gdx.gl.glClearColor(.9f, .9f, .95f, 1);
+		Gdx.gl.glClearColor(.824f, .969f, .992f, 1);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 		
 		controller.update(delta);
@@ -42,12 +42,24 @@ public class GameScreen extends AbstractScreen implements InputProcessor {
 			
 			@Override
 			public void hit() {
-				// TODO Auto-generated method stub
-				
+				/**
+				 * Called when player attacks 
+				 */
+			}
+			
+			@Override
+			public void exit() {
+				/**
+				 * End of level
+				 */
+				Gdx.app.log(RogueGame.LOG, "Leaving level...");
 			}
 			
 			@Override
 			public void enemy() {
+				/**
+				 * Killed an enemy
+				 */
 				Gdx.app.log(RogueGame.LOG, "Enemy died!");
 				
 				ArrayList<Enemy> newEnemies = new ArrayList<Enemy>();
@@ -61,6 +73,9 @@ public class GameScreen extends AbstractScreen implements InputProcessor {
 			
 			@Override
 			public void coin() {
+				/**
+				 * Collect a coin
+				 */
 				Gdx.app.log(RogueGame.LOG, String.format("Score: %d", world.score));
 				// TODO: should this be in GameScreen?
 				ArrayList<Coin> newCoins = new ArrayList<Coin>();

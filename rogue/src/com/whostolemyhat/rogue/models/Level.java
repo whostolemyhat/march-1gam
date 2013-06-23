@@ -11,6 +11,7 @@ public class Level {
 	public ArrayList<Enemy> enemies = new ArrayList<Enemy>();
 //	public ArrayList<Projectile> projectiles = new ArrayList<Projectile>();
 	public ArrayList<Coin> coins = new ArrayList<Coin>();
+	private Exit exit;
 	
 	public int getWidth() {
 		return width;
@@ -48,7 +49,14 @@ public class Level {
 		enemies.remove(index);
 	}
 	
+	public Exit getExit() {
+		return exit;
+	}
+	
 	private void loadDemoLevel() {
+		/**
+		 * Level must contain exit
+		 */
 		width = 30;
 		height = 14;
 		blocks = new Block[width][height];
@@ -57,6 +65,9 @@ public class Level {
 		enemies.add(new Enemy(new Vector2(7, 8)));
 		
 		coins.add(new Coin(new Vector2(10, 10)));
+		coins.add(new Coin(new Vector2(9, 10)));
+		coins.add(new Coin(new Vector2(11, 10)));
+		coins.add(new Coin(new Vector2(10, 11)));
 		
 		for(int col = 0; col < width; col++) {
 			for(int row = 0; row < height; row++) {
@@ -91,6 +102,8 @@ public class Level {
 		blocks[7][7] = new Block(new Vector2(7, 7));
 		blocks[6][7] = new Block(new Vector2(6, 7));
 		blocks[6][8] = new Block(new Vector2(6, 8));
+		
+		exit = new Exit(new Vector2(28, 3));
 	}
 
 	public Block get(int x, int y) {

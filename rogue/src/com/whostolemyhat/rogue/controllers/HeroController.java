@@ -11,6 +11,7 @@ import com.whostolemyhat.rogue.RogueGame;
 import com.whostolemyhat.rogue.models.Block;
 import com.whostolemyhat.rogue.models.Coin;
 import com.whostolemyhat.rogue.models.Enemy;
+import com.whostolemyhat.rogue.models.Exit;
 import com.whostolemyhat.rogue.models.Hero;
 import com.whostolemyhat.rogue.models.Hero.Direction;
 import com.whostolemyhat.rogue.models.Hero.State;
@@ -23,8 +24,9 @@ public class HeroController {
 	
 	private World world;
 	private Hero hero;
+	private Exit exit;
 	private Array<Block> collidable = new Array<Block>();
-	private Array<Enemy> collidableEnemies = new Array<Enemy>();
+//	private Array<Enemy> collidableEnemies = new Array<Enemy>();
 	private float COLLISION_DISTANCE = 1f;
 	private boolean shootPressed = false;
 	
@@ -47,6 +49,7 @@ public class HeroController {
 	public HeroController(World world) {
 		this.world = world;
 		this.hero = world.getHero();
+		this.exit = world.getExit();
 		for(Block block : world.getBlocks()) {
 			collidable.add(block);
 		}
@@ -110,11 +113,27 @@ public class HeroController {
 		checkCollisionWithBlocks(delta);
 		checkEnemyCollision();
 		checkItemCollision();
+		checkExitCollision();
 
 		hero.update(delta);
 		
 	} 
 	
+	private void checkExitCollision() {
+		Rectangle heroRect = rectPool.obtain();
+		heroRect.set(
+				hero.getBounds().x, 
+				hero.getBounds().y, 
+				hero.getBounds().width, 
+				hero.getBounds().height
+				);
+		
+		if(heroRect.overlaps(exit.getBounds())) {
+			world.listener.exit();
+		}
+		
+	}
+
 	// http://obviam.net/index.php/getting-started-in-android-game-development-with-libgdx-tutorial-part-4-collision-detection/
 	private Pool<Rectangle> rectPool = new Pool<Rectangle>() {
 		@Override
@@ -243,6 +262,7 @@ public class HeroController {
 //					hero.getVelocity().y = 0;
 //					hero.setState(State.STICKY);
 //				}
+
 				hero.getVelocity().x = 0;
 				world.getCollisionRects().add(block.getBounds());
 				break;
@@ -262,8 +282,7 @@ public class HeroController {
 		}
 		
 		populateCollidableBlocks(startX, startY, endX, endY);
-//		Gdx.app.log(RogueGame.LOG, String.format("%d %d %d %d", startX, startY, endX, endY));
-		
+	
 		heroRect.y += hero.getVelocity().y;
 		
 		for (Block block : collidable) {
@@ -277,9 +296,6 @@ public class HeroController {
 				break;
 			}
 		}
-		
-		// here
-		
 		// reset the collision box's position on Y
 		heroRect.y = hero.getPosition().y;
 
@@ -290,7 +306,6 @@ public class HeroController {
 		
 		// un-scale velocity (not in frame time)
 		hero.getVelocity().mul(1 / delta);
-		
 	}
 	
 	private void populateCollidableBlocks(int startX, int startY, int endX, int endY) {

@@ -1,68 +1,27 @@
 package com.whostolemyhat.rogue.models;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
 public class Block extends GameObject {
 	public static final float SIZE = 1f;
 	
-	Vector2 position = new Vector2();
-	Rectangle bounds = new Rectangle();
-	
-	public Texture texture;
-	public Color debugColour = new Color(0, 1, 0, 1);
-	
 	public Block(Vector2 pos) {
 		super(pos.x, pos.y, SIZE, SIZE);
-		
-		this.position = pos;
+
 		this.bounds.x = this.position.x;
 		this.bounds.y = this.position.y;
-		this.bounds.width = SIZE;
-		this.bounds.height = SIZE;
 		this.texture = new Texture(Gdx.files.internal("images/block.png"));
 	}
 	
-	public Block(Vector2 pos, Texture texture) {
-		super(pos.x, pos.y, SIZE, SIZE);
-		this.position = pos;
-		this.bounds.x = this.position.x;
-		this.bounds.y = this.position.y;
-		this.bounds.width = SIZE;
-		this.bounds.height = SIZE;
-		this.texture = texture;
-	}
-	
-	public Vector2 getPosition() {
-		return position;
-	}
-	
-	public Rectangle getBounds() {
-		return bounds;
-	}
-	
-	public void draw(SpriteBatch batch, float ppuX, float ppuY) {
-		batch.draw(
-				this.texture,
-				this.getPosition().x * ppuX, 
-				this.getPosition().y * ppuY,
-				Block.SIZE * ppuX, 
-				Block.SIZE * ppuY
-				);
-	}
-	
-	
-	public void draw(SpriteBatch batch) {
-		batch.draw(
-				this.texture,
-				this.getPosition().x, 
-				this.getPosition().y,
-				Block.SIZE, 
-				Block.SIZE
-				);
-	}
+//	public void draw(SpriteBatch batch) {
+//		batch.draw(
+//				this.texture,
+//				this.getPosition().x, 
+//				this.getPosition().y,
+//				Block.SIZE, 
+//				Block.SIZE
+//				);
+//	}
 }

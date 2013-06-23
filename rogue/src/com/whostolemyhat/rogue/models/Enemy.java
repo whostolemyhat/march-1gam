@@ -1,14 +1,13 @@
 package com.whostolemyhat.rogue.models;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.whostolemyhat.rogue.RogueGame;
 
 public class Enemy extends Hero {
 
-	public Color debugColour = new Color(0, 1, 0, 0);
+//	public Color debugColour = new Color(0, 1, 0, 0);
 	public int index;
 	public boolean active;
 	

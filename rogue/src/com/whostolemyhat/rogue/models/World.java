@@ -3,15 +3,9 @@ package com.whostolemyhat.rogue.models;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Pool;
-import com.whostolemyhat.rogue.RogueGame;
 
 public class World {
 	
@@ -19,6 +13,7 @@ public class World {
 		public void enemy();
 		public void hit();
 		public void coin();
+		public void exit();
 	}
 
 	Hero hero;
@@ -28,10 +23,7 @@ public class World {
 	
 	public static final float GRAVITY = -40f;
 	public Array<Rectangle> collisionRects = new Array<Rectangle>();
-//	
-//	private float ppuX;
-//	private float ppuY;
-//	
+
 	public World(WorldListener listener) {
 		createDemoWorld();
 		this.listener = listener;
@@ -39,14 +31,9 @@ public class World {
 	}
 	
 	public void update(float delta) {
-//		hero.update(delta);
 		updateHero(delta);
 		updateEnemies(delta);
 		updateCoins(delta);
-//		if(!hero.getState().equals(Hero.State.HIT)) {
-//			checkCollisions();
-//		}
-//		checkGameOver();
 	}
 	
 	private void updateHero(float delta) {
@@ -66,24 +53,7 @@ public class World {
 			coin.update(delta);
 		}
 	}
-	
-	
-//	public float getPpuX() {
-//		return ppuX;
-//	}
-//	
-//	public float getPpuY() {
-//		return ppuY;
-//	}
-//	
-//	public void setPpuX(float newPpu) {
-//		this.ppuX = newPpu;
-//	}
-//	
-//	public void setPpuY(float newPpu) {
-//		this.ppuY = newPpu;
-//	}
-//	
+
 	public ArrayList<Block> getBlocks() {
 		Block block;
 		ArrayList<Block> blocks = new ArrayList<Block>();
@@ -106,6 +76,10 @@ public class World {
 	
 	public Hero getHero() {
 		return hero;
+	}
+	
+	public Exit getExit() {
+		return getLevel().getExit();
 	}
 	
 	public ArrayList<Enemy> getEnemies() {

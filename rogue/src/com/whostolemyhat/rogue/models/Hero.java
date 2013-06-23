@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Rectangle;
@@ -36,7 +37,7 @@ public class Hero {
 	
 	Weapon weapon = new Weapon();
 	
-	public Color debugColour = new Color(1, 0, 0, 1);
+//	public Color debugColour = new Color(1, 0, 0, 1);
 	public Texture texture;
 	
 	public Hero(Vector2 position) {
@@ -47,6 +48,16 @@ public class Hero {
 		this.bounds.y = this.position.y;
 		this.texture = new Texture(Gdx.files.internal("images/hero_01.png"));
 //		this.texture = new Texture(Gdx.files.internal("images/coin.png"));
+	}
+	
+	public void draw(SpriteBatch batch) {
+		batch.draw(
+				this.texture,
+				this.getPosition().x, 
+				this.getPosition().y,
+				SIZE, 
+				SIZE
+				);
 	}
 	
 	public Vector2 getPosition() {
