@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 
 public class Block extends GameObject {
 	public static final float SIZE = 1f;
+	public boolean sticky = false;
 	
 	public Block(Vector2 pos) {
 		super(pos.x, pos.y, SIZE, SIZE);

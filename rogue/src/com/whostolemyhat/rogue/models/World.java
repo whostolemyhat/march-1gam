@@ -130,6 +130,10 @@ public class World {
 		return blocks;
 	}
 	
+	public int getWidth() {
+		return level.getWidth();
+	}
+	
 	private void createDemoWorld() {
 //		hero = new Hero(new Vector2(7, 2));
 		level = new Level();

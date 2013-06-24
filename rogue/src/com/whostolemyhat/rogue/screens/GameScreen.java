@@ -54,6 +54,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor {
 				 */
 				Gdx.app.log(RogueGame.LOG, "Leaving level...");
 				Gdx.app.log(RogueGame.LOG, String.format("Final score: %d", world.score));
+				game.setScreen(new TitleScreen(game));
 			}
 			
 			@Override

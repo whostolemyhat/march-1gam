@@ -10,6 +10,7 @@ public class Wall extends Block {
 		super(pos);
 		// TODO: already set in Block - inefficient
 		this.texture =  new Texture(Gdx.files.internal("images/wall.png"));
+		this.sticky = true;
 	}
 
 }

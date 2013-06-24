@@ -112,11 +112,27 @@ public class HeroController {
 		checkEnemyCollision();
 		checkItemCollision();
 		checkExitCollision();
+		
+		checkInBounds();
 
 		hero.update(delta);
 		
 	} 
 	
+	private void checkInBounds() {
+		Rectangle heroRect = rectPool.obtain();
+		heroRect.set(
+				hero.getBounds().x, 
+				hero.getBounds().y, 
+				hero.getBounds().width, 
+				hero.getBounds().height
+				);
+		if(heroRect.x > world.getWidth() || heroRect.x < 0 || heroRect.y < 0) {
+			// game over man, game over!
+			hero.die();
+		}
+	}
+
 	private void checkExitCollision() {
 		Rectangle heroRect = rectPool.obtain();
 		heroRect.set(
@@ -258,11 +274,11 @@ public class HeroController {
 		for (Block block : collidable) {
 			if (block == null) continue;
 			if (heroRect.overlaps(block.getBounds())) {
-//				if(!grounded) {
+				if(!grounded && block.sticky) {
 //					// Sticky / wall jump
-//					hero.getVelocity().y = 0;
-//					hero.setState(State.STICKY);
-//				}
+					hero.getVelocity().y = 0;
+					hero.setState(State.STICKY);
+				}
 
 				hero.getVelocity().x = 0;
 				world.getCollisionRects().add(block.getBounds());
