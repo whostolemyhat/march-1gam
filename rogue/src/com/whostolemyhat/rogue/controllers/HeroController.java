@@ -24,7 +24,6 @@ public class HeroController {
 	
 	private World world;
 	private Hero hero;
-	private Exit exit;
 	private Array<Block> collidable = new Array<Block>();
 //	private Array<Enemy> collidableEnemies = new Array<Enemy>();
 	private float COLLISION_DISTANCE = 1f;
@@ -49,7 +48,6 @@ public class HeroController {
 	public HeroController(World world) {
 		this.world = world;
 		this.hero = world.getHero();
-		this.exit = world.getExit();
 		for(Block block : world.getBlocks()) {
 			collidable.add(block);
 		}
@@ -128,8 +126,10 @@ public class HeroController {
 				hero.getBounds().height
 				);
 		
-		if(heroRect.overlaps(exit.getBounds())) {
-			world.listener.exit();
+		for(Exit exit : world.getExit()) {
+			if(heroRect.overlaps(exit.getBounds())) {
+				world.listener.exit();
+			}
 		}
 		
 	}
@@ -165,7 +165,8 @@ public class HeroController {
 			if(heroRect.overlaps(enemy.getBounds())) {
 				// reset position
 				if(hero.getVelocity().y < 0) {
-					enemy.die();
+					enemy.die(world);
+					
 					world.listener.enemy();
 				} else if(hero.getPosition().x < enemy.getPosition().x) {
 					hero.getPosition().x -= COLLISION_DISTANCE;

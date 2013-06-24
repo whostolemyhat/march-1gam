@@ -17,7 +17,7 @@ public class WorldRenderer {
 	private World world;
 	private OrthographicCamera cam;
 	private Hero hero;
-	private Exit exit;
+//	private Exit exit;
 	
 	private static final float CAMERA_WIDTH = 20f;
 	private static final float CAMERA_HEIGHT = 14f;
@@ -33,7 +33,7 @@ public class WorldRenderer {
 	public WorldRenderer(World world, boolean debug) {
 		this.world = world;
 		this.hero = world.getHero();
-		this.exit = world.getExit();
+//		this.exit = world.getExit();
 		
 		this.cam = new OrthographicCamera(CAMERA_WIDTH, CAMERA_HEIGHT);
 //		this.cam = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -87,7 +87,10 @@ public class WorldRenderer {
 	}
 	
 	private void drawExit() {
-		exit.draw(batch);
+		for(Exit exit : world.getExit()) {
+			exit.draw(batch);
+		}
+		
 	}
 	
 	private void drawCoins() {

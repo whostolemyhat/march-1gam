@@ -7,9 +7,9 @@ import com.whostolemyhat.rogue.RogueGame;
 
 public class Enemy extends Hero {
 
-//	public Color debugColour = new Color(0, 1, 0, 0);
 	public int index;
 	public boolean active;
+	private int score;
 	
 	public enum State {
 		IDLE, WALKING, ATTACKING
@@ -19,10 +19,12 @@ public class Enemy extends Hero {
 		super(position);
 		this.texture = new Texture(Gdx.files.internal("images/enemy.png"));
 		this.active = true;
+		this.score = 12;
 	}
 	
-	public void die() {
+	public void die(World world) {
 		Gdx.app.log(RogueGame.LOG, "Enemy died!");
+		world.score += this.score;
 		this.active = false;
 	}
 

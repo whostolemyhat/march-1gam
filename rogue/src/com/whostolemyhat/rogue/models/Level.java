@@ -11,7 +11,12 @@ public class Level {
 	public ArrayList<Enemy> enemies = new ArrayList<Enemy>();
 //	public ArrayList<Projectile> projectiles = new ArrayList<Projectile>();
 	public ArrayList<Coin> coins = new ArrayList<Coin>();
-	private Exit exit;
+	private ArrayList<Exit> exit = new ArrayList<Exit>();
+	private Hero hero;
+	
+	public Hero getHero() {
+		return hero;
+	}
 	
 	public int getWidth() {
 		return width;
@@ -49,17 +54,20 @@ public class Level {
 		enemies.remove(index);
 	}
 	
-	public Exit getExit() {
+	public ArrayList<Exit> getExit() {
 		return exit;
 	}
 	
 	private void loadDemoLevel() {
 		/**
-		 * Level must contain exit
+		 * Demo level!
+		 * TODO: import from Tiled
 		 */
 		width = 30;
 		height = 14;
 		blocks = new Block[width][height];
+		
+		hero = new Hero(new Vector2(2, 1));
 		
 		enemies.add(new Enemy(new Vector2(10, 1)));
 		enemies.add(new Enemy(new Vector2(7, 8)));
@@ -69,6 +77,10 @@ public class Level {
 		coins.add(new Coin(new Vector2(11, 10)));
 		coins.add(new Coin(new Vector2(10, 11)));
 		
+		coins.add(new Coin(new Vector2(4, 1)));
+		coins.add(new Coin(new Vector2(5, 1)));
+		coins.add(new Coin(new Vector2(6, 1)));
+		
 		for(int col = 0; col < width; col++) {
 			for(int row = 0; row < height; row++) {
 				blocks[col][row] = null;
@@ -77,9 +89,9 @@ public class Level {
 		
 		for(int col = 0; col < width; col++) {
 			blocks[col][0] = new Wall(new Vector2(col, 0));
-			blocks[col][13] = new Wall(new Vector2(col, 13));
+//			blocks[col][13] = new Wall(new Vector2(col, 13));
 		}
-		for(int row = 0; row < height; row++) {
+		for(int row = 0; row < 6; row++) {
 			blocks[0][row] = new Wall(new Vector2(0, row));
 			blocks[29][row] = new Wall(new Vector2(29, row));
 		}
@@ -103,7 +115,12 @@ public class Level {
 		blocks[6][7] = new Block(new Vector2(6, 7));
 		blocks[6][8] = new Block(new Vector2(6, 8));
 		
-		exit = new Exit(new Vector2(28, 3));
+		blocks[18][8] = new Block(new Vector2(18, 8));
+		blocks[19][8] = new Block(new Vector2(19, 8));
+		blocks[20][8] = new Block(new Vector2(20, 8));
+		
+		exit.add(new Exit(new Vector2(28, 2)));
+		exit.add(new Exit(new Vector2(28, 1)));
 	}
 
 	public Block get(int x, int y) {

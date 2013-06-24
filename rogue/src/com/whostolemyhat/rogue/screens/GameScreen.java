@@ -53,6 +53,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor {
 				 * End of level
 				 */
 				Gdx.app.log(RogueGame.LOG, "Leaving level...");
+				Gdx.app.log(RogueGame.LOG, String.format("Final score: %d", world.score));
 			}
 			
 			@Override
@@ -61,6 +62,7 @@ public class GameScreen extends AbstractScreen implements InputProcessor {
 				 * Killed an enemy
 				 */
 				Gdx.app.log(RogueGame.LOG, "Enemy died!");
+				Gdx.app.log(RogueGame.LOG, String.format("Score: %d", world.score));
 				
 				ArrayList<Enemy> newEnemies = new ArrayList<Enemy>();
 				for(Enemy e : world.getLevel().getEnemies()) {

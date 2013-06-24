@@ -36,8 +36,6 @@ public class Hero {
 	float stateTime = 0;
 	
 	Weapon weapon = new Weapon();
-	
-//	public Color debugColour = new Color(1, 0, 0, 1);
 	public Texture texture;
 	
 	public Hero(Vector2 position) {
@@ -47,7 +45,6 @@ public class Hero {
 		this.bounds.x = this.position.x;
 		this.bounds.y = this.position.y;
 		this.texture = new Texture(Gdx.files.internal("images/hero_01.png"));
-//		this.texture = new Texture(Gdx.files.internal("images/coin.png"));
 	}
 	
 	public void draw(SpriteBatch batch) {

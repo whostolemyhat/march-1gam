@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 
 public class World {
@@ -26,6 +25,7 @@ public class World {
 
 	public World(WorldListener listener) {
 		createDemoWorld();
+		this.hero = this.getHero();
 		this.listener = listener;
 		score = 0;
 	}
@@ -75,10 +75,10 @@ public class World {
 	}
 	
 	public Hero getHero() {
-		return hero;
+		return getLevel().getHero();
 	}
 	
-	public Exit getExit() {
+	public ArrayList<Exit> getExit() {
 		return getLevel().getExit();
 	}
 	
@@ -131,7 +131,7 @@ public class World {
 	}
 	
 	private void createDemoWorld() {
-		hero = new Hero(new Vector2(7, 2));
+//		hero = new Hero(new Vector2(7, 2));
 		level = new Level();
 	}
 	
